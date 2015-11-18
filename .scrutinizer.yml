@@ -1,0 +1,10 @@
+before_commands:
+    - "composer install --prefer-source"
+
+build:
+
+    tests:
+        override:
+            -
+                command: phpunit tests
+                on_node: 1
