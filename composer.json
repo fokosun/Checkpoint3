@@ -1,0 +1,12 @@
+{
+    "name": "florence/emoji",
+    "description": "Emoji REST API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "andela-fokosun",
+            "email": "okosunuzflorence@gmail.com"
+        }
+    ],
+    "require": {}
+}
