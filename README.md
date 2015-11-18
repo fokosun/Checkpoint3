@@ -1,2 +1,2 @@
-# Checkpoint3
-Emoji REST API
+# Emoji REST API
+
