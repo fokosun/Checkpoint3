@@ -15,8 +15,9 @@ $app = new Slim([
 // Create user instance
 $user = new User();
 
+//create a new user
 $app->get('/register', function() use ($user) {
-   $user->getToken();
+   // $user->getToken();
 });
 
 $app->post('auth/login', function() use ($user) {
@@ -51,5 +52,12 @@ $app->delete('/emojis/:id', function($id) use ($user) {
    //EmojiController->delete();
 });
 
-
+$app->get('/', function() use($app)
+    {
+        $html = $app->request->headers->all();
+        var_dump(json_encode($html));
+        //this guy will load my home view
+    });
 $app->run();
+
+
