@@ -15,49 +15,53 @@ $app = new Slim([
 // Create user instance
 $user = new User();
 
-//create a new user
-$app->get('/register', function() use ($user) {
-   // $user->getToken();
-});
+    //Auth routes
+    $app->group('/auth', function () use ($app) {
 
-$app->post('auth/login', function() use ($user) {
-   //AuthController->logIn();
-});
+        //create a new user
+        $app->get('/register', function() use ($user) {
+            // $user->getToken();
+        });
 
-$app->get('auth/logout', function() use ($user) {
-   //AuthController->logOut();
-});
+        //login
+        $app->post('/login', function() use ($user) {
+            //AuthController->logIn();
+        });
 
-$app->get('/emojis', function() use ($user) {
-   //EmojiController->getAll();
-});
-
-$app->get('/emojis/:id', function($id) use ($user) {
-   //EmojiController->find($id);
-});
-
-$app->post('/emojis', function() use ($user) {
-   //EmojiController->create();
-});
-
-$app->put('/emojis/:id', function($id) use ($user) {
-   //EmojiController->update($id);
-});
-
-$app->patch('/emojis/:id', function($id) use ($user) {
-   //EmojiController->updatePartial($id);
-});
-
-$app->delete('/emojis/:id', function($id) use ($user) {
-   //EmojiController->delete();
-});
-
-$app->get('/', function() use($app)
-    {
-        $html = $app->request->headers->all();
-        var_dump(json_encode($html));
-        //this guy will load my home view
+        //logout
+        $app->get('auth/logout', function() use ($user) {
+            //AuthController->logOut();
+        });
     });
+
+    // Emojis routes
+    $app->group('/emojis', function () use ($app) {
+
+        $app->get('/', function() use ($user) {
+            //EmojiController->getAll();
+        });
+
+        $app->get('/:id', function($id) use ($user) {
+            //EmojiController->find($id);
+        });
+
+        $app->post('/', function() use ($user) {
+            //EmojiController->create();
+        });
+
+        $app->put('/:id', function($id) use ($user) {
+            //EmojiController->update($id);
+        });
+
+        $app->patch('/:id', function($id) use ($user) {
+            //EmojiController->updatePartial($id);
+        });
+
+        $app->delete('/:id', function($id) use ($user) {
+            //EmojiController->delete();
+            // pass $id to EmojiController@delete($id)
+        });
+
+    });
+
 $app->run();
-
-
