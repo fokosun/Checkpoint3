@@ -1,1 +1,0 @@
-echo "setting up";
