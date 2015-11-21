@@ -3,11 +3,16 @@
 namespace Florence;
 
 use PDOException;
-use Florence\User;
 use Florence\Emoji;
 
 class EmojiController
 {
+
+    public function __construct()
+    {
+        $this->emoji = new Emoji();
+    }
+
     /**
     * get db connection
     */
@@ -19,19 +24,17 @@ class EmojiController
         }
     }
 
-    public function create(User $user)
+    public function create() //POST
     {
         $connection = $this->getConnection();
 
-        $emoji = new Emoji;
-
-        $name = $emoji->getName();
-        $char = $emoji->getChar();
-        $keywords = $emoji->getKeywords();
-        $category = $emoji->getCategory();
-        $date_created = $emoji->getDateCreated();
-        $date_modified = $emoji->getDateModified();
-        $created_by = $emoji->getCreatedBy();
+        $name = $this->emoji->getName();
+        $char = $this->emoji->getChar();
+        $keywords = $this->emoji->getKeywords();
+        $category = $this->emoji->getCategory();
+        $date_created = $this->emoji->getDateCreated();
+        $date_modified = $this->emoji->getDateModified();
+        $created_by = $this->emoji->getCreatedBy();
 
         $create = "INSERT INTO emojis(name,char,keywords,category,date_created,date_modified,created_by)
         VALUES (. " . $name . "," . $char . "," . $keywords . "," . $category . ","
@@ -54,13 +57,27 @@ class EmojiController
         }
     }
 
-    public function update($id)
+    public function getAll()
     {
-        //update moji where id = $id
+        // spits all emojis out
+        // GET
+    }
+
+    public function getById($id)
+    {
+        //get emoji by id
+        // GET
+    }
+
+    public function updateById($id)
+    {
+        //update emoji by id
+        // PUT
     }
 
     public function delete($id)
     {
-        //delewherte moji where id = $id
+        //destroy the mother fucker
+        // DELETE
     }
 }
