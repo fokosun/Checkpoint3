@@ -32,8 +32,8 @@ class User {
 
     public function getToken()
     {
-        $this->token = base64_encode("hello, world");
-        var_dump($this->token);
+        $this->token = base64_encode($this->getUserName() . $this->getPassword());
+        return $this->token;
     }
 
     public function getTokenExpire()
