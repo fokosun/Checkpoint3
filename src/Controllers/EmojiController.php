@@ -33,32 +33,34 @@ class EmojiController
         $date_modified = $emoji->getDateModified();
         $created_by = $emoji->getCreatedBy();
 
-    $create = "INSERT INTO emojis(name,char,keywords,category,date_created,date_modified,created_by)
+        $create = "INSERT INTO emojis(name,char,keywords,category,date_created,date_modified,created_by)
         VALUES (. " . $name . "," . $char . "," . $keywords . "," . $category . ","
             . $date_created . "," . $updated_at . ")";
 
         $stmt = $connection->prepare($create);
-            try
-            {
-                $stmt->execute();
-                $count = $stmt->rowCount();
-                if($count < 1) {
-                    throw new RecordExistAlreadyException('Record exist already.');
-                }
-            } catch (RecordExistAlreadyException $e) {
-            return $e->getExceptionMessage();
-            } catch(PDOException $e) {
-                return $e->getExceptionMessage();
+        try
+        {
+            $stmt->execute();
+            $count = $stmt->rowCount();
+            if($count < 1) {
+                throw new RecordExistAlreadyException('Record exist already.');
             }
-        }
+        } catch (RecordExistAlreadyException $e) {
 
-        public function update($id)
-        {
-            //update moji where id = $id
-        }
+        return $e->getExceptionMessage();
+        } catch(PDOException $e) {
 
-        public function delete($id)
-        {
-            //delewherte moji where id = $id
+                return $e->getExceptionMessage();
         }
     }
+
+    public function update($id)
+    {
+        //update moji where id = $id
+    }
+
+    public function delete($id)
+    {
+        //delewherte moji where id = $id
+    }
+}
