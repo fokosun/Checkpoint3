@@ -7,5 +7,6 @@ use Florence\User;
 
 class AuthController
 {
-    // confirms authorization from middleware mr JWT
+    // Methods
+    // register, login, logout
 }
