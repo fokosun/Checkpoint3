@@ -4,33 +4,86 @@ namespace Florence;
 
 class Emoji
 {
-    protected $name;
-    protected $char;
-    protected $keywords;
-    protected $category;
-    protected $date_created;
-    protected $date_modified;
-    protected $created_by;
+    /**
+    * @var string $name
+    * The emoji name
+    */
+    private $name;
 
-    public function __construct($name, $char, $keywords, $category, $date_created, $date_modified, $created_by)
+    /**
+    * @var string $emojiChar
+    * emoji hex-code
+    */
+    private $char_;
+
+    /**
+    * @var array $keywords
+    * tags to describe the emoji e.g [people, laugh]
+    */
+    private $keywords;
+
+    /**
+    * @var string $category
+    * emoji category e.g Nature, Travel & places
+    */
+    private $category;
+
+    /**
+    * @var $date_created
+    */
+    private $date_created;
+
+    /**
+    * @var $date_modified
+    */
+    private $date_modified;
+
+    /**
+    * @var int $created_by
+    * The user id of the creator
+    */
+    private $created_by;
+
+    /**
+    * @param $name
+    * @param $char_
+    * @param $keywords
+    * @param $category
+    * emoji instance constructor
+    */
+    public function __construct($name, $emojiChar, $keywords, $category)
     {
         $this->name = $name;
-        $this->char = $char;
+        $this->emojiChar = $emojiChar;
         $this->keywsrds = $keywords;
         $this->category = $category;
-        $this->date_created = $date_created;
-        $this->date_modified = $date_modified;
-        $this->created_by = $created_by;
     }
 
+    /**
+    * @return string
+    * get the name of the emoji
+    */
     public function getName()
     {
         return $this->name;
     }
 
-    public function getChar()
+    /**
+    * @return string
+    * get the emoji hex-code
+    */
+    public function getEmojiChar()
     {
-        return $this->char;
+        return $this->emojiChar;
+    }
+
+    /**
+    * @param $keywords
+    * Set the keywords
+    */
+    public function setKeywords($keywords)
+    {
+        $this->keywords = $keywords;
     }
 
     public function getKeywords()
@@ -38,9 +91,12 @@ class Emoji
         return $this->keywords;
     }
 
-    public function getCategory()
+    /**
+    * @param $date_created
+    */
+    public function setDateCreated($dateCreated)
     {
-        return $this->category;
+        $this->date_created = $dateCreated;
     }
 
     public function getDateCreated()
@@ -48,14 +104,30 @@ class Emoji
         return $this->date_created;
     }
 
+    /**
+    * @param $date_modified
+    */
+    public function setDateModified($dateModified)
+    {
+        $this->date_modified = $dateModified;
+    }
+
     public function getDateModified()
     {
         return $this->date_modified;
     }
 
+    /**
+    * @param $createdBy
+    */
+    public function setCreatedBy($createdBy)
+    {
+        $this->created_by = $createdBy;
+    }
+
     public function getCreatedBy()
     {
-        return $this->created_by;
+       return $this->created_by;
     }
 
 }

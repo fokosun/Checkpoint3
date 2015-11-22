@@ -25,7 +25,9 @@ class User {
     private $token_expire;
 
     /**
-    * user instance constructor
+    * @param $username
+    * @param $password
+    * User instance constructor
     */
     public function __construct($username, $password)
     {
