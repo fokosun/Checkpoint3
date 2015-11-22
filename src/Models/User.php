@@ -3,52 +3,87 @@
 namespace Florence;
 
 class User {
-    protected $username;
-    protected $password;
-    protected $token;
-    protected $token_expire;
-    protected $created_at;
-    protected $updated_at;
 
-    public function __construct($username, $password, $token, $created_at, $updated_at)
+    /**
+    * @var string $username
+    */
+    private $username;
+
+    /**
+    * @var string $password
+    */
+    private $password;
+
+    /**
+    * @var $token
+    */
+    private $token;
+
+    /**
+    * @var $token_expire
+    */
+    private $token_expire;
+
+    /**
+    * user instance constructor
+    */
+    public function __construct($username, $password)
     {
         $this->username = $username;
         $this->password = $password;
-        $this->token = $token;
-        $this->token_expire = $token_expire;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
     }
 
+    /**
+    * @return string
+    * get the username for a user instance
+    */
     public function getUserName()
     {
         return $this->username;
     }
 
+    /**
+    * @return string
+    * get the password for a user instance
+    */
     public function getPassword()
     {
         return $this->password;
     }
 
+    /**
+    * @param $token
+    * set the verification token for the user instance
+    */
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    /**
+    * @param $token
+    * set expiry time for the token
+    */
+    public function setTokenExpire($tokenExpire)
+    {
+        $this->token_expire = $tokenExpire;
+    }
+
+    /**
+    * @param $token
+    * get the verification token for the user instance
+    */
     public function getToken()
     {
-        $this->token = base64_encode($this->getUserName() . $this->getPassword());
         return $this->token;
     }
 
+    /**
+    * @param $token
+    * get the expiry time for the token
+    */
     public function getTokenExpire()
     {
         return $this->token_expire;
     }
-
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updated_at;
-    }
-
 }
