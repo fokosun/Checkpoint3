@@ -6,6 +6,7 @@ require "vendor/autoload.php";
 
 use Slim\Slim;
 use Slim\Http\Response;
+use Florence\AuthController;
 
 $app = new Slim([
     'templates.path' => 'templates/',
@@ -13,24 +14,25 @@ $app = new Slim([
 ]);
 
 
-// Create user instance
-$user = new User();
+// // Create user instance
+// $user = new User();
 
     //Auth routes
     $app->group('/auth', function () use ($app) {
 
         //create a new user
-        $app->get('/register', function() use ($user) {
-            // $user->getToken();
+        $app->get('/register', function() use ($app) {
+            $auth = new AuthController();
+            $auth->register($app);
         });
 
         //login
-        $app->post('/login', function() use ($user) {
+        $app->post('/login', function() use ($app) {
             //AuthController->logIn();
         });
 
         //logout
-        $app->get('auth/logout', function() use ($user) {
+        $app->get('auth/logout', function() use ($app) {
             //AuthController->logOut();
         });
     });
@@ -43,13 +45,11 @@ $user = new User();
             // $data = json_decode($app->request->getBody());
 
             // $contentType = $app->response->headers->get('Content-Type');
-            $res = new Response();
-            $res->setStatus(400);
-            $res->write('You made a bad request');
-            $res->headers->set('Content-Type', 'text/plain');
-            $array = $res->finalize();
-            $app->render('register.html', ['array' => $array]);
-            var_dump($array);
+            // $res = new Response();
+            // $res->setStatus(400);
+            // $res->write('You made a bad request');
+            // $res->headers->set('Content-Type', 'text/plain');
+            // $array = $res->finalize();
         });
 
         $app->get('/:id', function($id) use ($user) {

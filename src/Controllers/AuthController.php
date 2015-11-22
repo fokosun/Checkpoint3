@@ -4,7 +4,6 @@ namespace Florence;
 
 use PDOException;
 use Florence\User;
-use \Firebase\JWT\JWT;
 
 class AuthController
 {
