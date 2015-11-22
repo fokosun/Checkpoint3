@@ -5,6 +5,7 @@ namespace Florence;
 require "vendor/autoload.php";
 
 use Slim\Slim;
+use Slim\Http\Response;
 
 $app = new Slim([
     'templates.path' => 'templates/',
@@ -37,8 +38,18 @@ $user = new User();
     // Emojis routes
     $app->group('/emojis', function () use ($app) {
 
-        $app->get('/', function() use ($user) {
+        $app->get('/', function() use ($user, $app) {
             //EmojiController->getAll();
+            // $data = json_decode($app->request->getBody());
+
+            // $contentType = $app->response->headers->get('Content-Type');
+            $res = new Response();
+            $res->setStatus(400);
+            $res->write('You made a bad request');
+            $res->headers->set('Content-Type', 'text/plain');
+            $array = $res->finalize();
+            $app->render('register.html', ['array' => $array]);
+            var_dump($array);
         });
 
         $app->get('/:id', function($id) use ($user) {
@@ -65,3 +76,8 @@ $user = new User();
     });
 
 $app->run();
+
+// \Slim\Http\Request
+// <?php
+// // Returns instance of \Slim\Http\Request
+// $request = $app->request;
