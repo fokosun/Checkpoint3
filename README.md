@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/andela-fokosun/Checkpoint3.svg)](https://travis-ci.org/andela-fokosun/Checkpoint3)
 
 # Emoji REST API
-:bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue:
+:bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue:
 
 Emoji is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API uses simple token based authentication.
 
