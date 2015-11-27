@@ -13,13 +13,13 @@ Working on a client project or on a side project? There are many fun stuff you c
 
 So you can for example run a GET request in [Postman](https://www.getpostman.com/) like so:
 
-        GET: https://emojifordevs.herokuapp.com/emojis
+        GET: https://emojisfordevs.herokuapp.com/emojis
 
-        GET: https://emojifordevs.herokuapp.com/emojis/1
+        GET: https://emojisfordevs.herokuapp.com/emojis/1
 
 Say you want emojis of a particular category, `skype` for example:
 
-        GET: https://emojifordevs.herokuapp.com/category/skype
+        GET: https://emojisfordevs.herokuapp.com/category/skype
 
 output:
 
