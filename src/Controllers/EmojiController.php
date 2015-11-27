@@ -208,7 +208,6 @@ abstract class EmojiController
             } else {
                 $response->body(json_encode(['status' => 301, 'message' => 'Bad request']));
                 return $response;
-                //throw new Exception("Error Processing Request");
             }
 
         } catch (PDOException $e) {
