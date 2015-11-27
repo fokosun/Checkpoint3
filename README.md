@@ -3,7 +3,7 @@
 # EmojiforDevs REST API
 :bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue::bowtie: :blush:
 
-EmojiforDevs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API uses simple token based authentication.
+EmojiforDevs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API employs the use of simple token based authentication.
 
 ##Usage
 
