@@ -13,11 +13,11 @@ Working on a client project or on a side project? There are many fun stuff you c
 
 So you can for example run a GET in Postman like so:
 
-        GET: http://emojisfordevs.herokuapps.com/emojis
+        GET: https://emojifordevs.herokuapp.com/emojis
 
-        GET: http://emojisfordevs.herokuapps.com/emojis/1
+        GET: https://emojifordevs.herokuapp.com/emojis/1
 
-See [full documentation](http://emojisfordevs.herokuapps.com) for the various endpoints and how to consume them.
+See [full documentation](https://emojifordevs.herokuapp.com) for the various endpoints and how to consume them.
 
 ##Contributing
 This is an open-source project, so please feel free to tell family and friends to contribute to EmojiforDevs to make it even more awesome. [**see how**]()
