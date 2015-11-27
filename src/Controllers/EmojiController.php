@@ -91,7 +91,7 @@ abstract class EmojiController
 
             if($stmt->rowCount() > 0) {
                 $response->body(json_encode([
-                  'status'  => 201,
+                  'status'  => 200,
                   'message' => 'Record created'
                 ]));
             } else {
@@ -200,17 +200,17 @@ abstract class EmojiController
 
             if($stmt->rowCount() > 0) {
                 $response->body(json_encode([
-                  'status'  => 201,
+                  'status'  => 200,
                   'message' => 'Record updated'
                 ]));
                 return $response;
             } else {
-                $response->body(json_encode(['status' => 301, 'message' => 'Bad request']));
+                $response->body(json_encode(['status' => 400, 'message' => 'Bad request']));
                 return $response;
             }
 
         } catch (PDOException $e) {
-            $response->body(json_encode(['message'=> $e->getMessage()]));
+            $response->body(json_encode(['status' => 400,'message'=> $e->getMessage()]));
             return $response;
         }
 
@@ -231,11 +231,14 @@ abstract class EmojiController
 
             if($stmt->rowCount() > 0) {
                 $response->body(json_encode([
-                  'status'  => 201,
-                  'message' => 'Record Deleted'
+                  'status'  => 200,
+                  'message' => 'Record Deleted successfully'
                 ]));
             } else {
-                throw new Exception("Error Processing Request", 1);
+                $response->body(json_encode([
+                  'status'  => 500,
+                  'message' => 'Error processing request'
+                ]));
             }
 
         } catch (PDOException $e) {
