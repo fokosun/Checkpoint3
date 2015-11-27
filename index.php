@@ -1,83 +1,64 @@
 <?php
 
-namespace Florence;
+/**
+* Emoji API
+* This script provides a RESTful API interface for Emojis
+* Author: It is I, Florence Okosun
+*/
 
 require "vendor/autoload.php";
 
 use Slim\Slim;
-use Slim\Http\Response;
-use Florence\AuthController;
+use Florence\Emoji;
+use Florence\EmojiController;
 
-$app = new Slim([
-    'templates.path' => 'templates/',
-    'debug'          => true
-]);
+$app = new Slim;
 
 
-// // Create user instance
-// $user = new User();
+$app->group('/emojis', function () use ($app) {
 
-    //Auth routes
-    $app->group('/auth', function () use ($app) {
-
-        //create a new user
-        $app->get('/register', function() use ($app) {
-            $auth = new AuthController();
-            $auth->register($app);
-        });
-
-        //login
-        $app->post('/login', function() use ($app) {
-            //AuthController->logIn();
-        });
-
-        //logout
-        $app->get('auth/logout', function() use ($app) {
-            //AuthController->logOut();
-        });
+    /**
+    * View all emojis
+    */
+    $app->get('/', function () use ($app) {
+        Emoji::getAll($app);
     });
 
-    // Emojis routes
-    $app->group('/emojis', function () use ($app) {
-
-        $app->get('/', function() use ($user, $app) {
-            //EmojiController->getAll();
-            // $data = json_decode($app->request->getBody());
-
-            // $contentType = $app->response->headers->get('Content-Type');
-            // $res = new Response();
-            // $res->setStatus(400);
-            // $res->write('You made a bad request');
-            // $res->headers->set('Content-Type', 'text/plain');
-            // $array = $res->finalize();
-        });
-
-        $app->get('/:id', function($id) use ($user) {
-            //EmojiController->find($id);
-        });
-
-        $app->post('/', function() use ($user) {
-            //EmojiController->create();
-        });
-
-        $app->put('/:id', function($id) use ($user) {
-            //EmojiController->update($id);
-        });
-
-        $app->patch('/:id', function($id) use ($user) {
-            //EmojiController->updatePartial($id);
-        });
-
-        $app->delete('/:id', function($id) use ($user) {
-            //EmojiController->delete();
-            // pass $id to EmojiController@delete($id)
-        });
-
+    /**
+    * Find emoji by id
+    */
+    $app->get('/:id', function ($id) use ($app) {
+        Emoji::find($app, $id);
     });
+
+    /**
+    * Create new emoji
+    */
+    $app->post('/', function () use ($app) {
+        Emoji::create($app);
+    });
+
+    /**
+    * Update an emoji
+    */
+    $app->put('/:id', function ($id) use ($app) {
+        Emoji::update($app, $id);
+    });
+
+    /**
+    * Update an emoji
+    */
+    $app->delete('/:id', function ($id) use ($app) {
+        Emoji::delete($app, $id);
+    });
+
+    /**
+    * extra (fetch emoji by category)
+    */
+    $app->get('/:field/:criteria', function ($field, $criteria) use ($app) {
+        Emoji::findBy($app, $field, $criteria);
+    });
+
+});
 
 $app->run();
-
-// \Slim\Http\Request
-// <?php
-// // Returns instance of \Slim\Http\Request
-// $request = $app->request;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by Florence Okosun.
- * Project: Checkpoint Two
+ * Project: Checkpoint Three
  * Date: 11/3/2015
  * Time: 3:48 PM
  */

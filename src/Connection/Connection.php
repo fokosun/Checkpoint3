@@ -12,7 +12,7 @@ use PDO;
 use PDOException;
 use Dotenv\Dotenv;
 
-class DBConnection extends PDO
+class Connection extends PDO
 {
     protected $dsn = [];
     protected $database;
@@ -45,7 +45,6 @@ class DBConnection extends PDO
         {
             parent::__construct("$driver:dbname=$database;host=$host", $username, $password,
                 [PDO::ATTR_PERSISTENT => true]);
-
         }
         catch(PDOException $e)
         {

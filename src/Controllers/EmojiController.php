@@ -1,83 +1,249 @@
 <?php
+/**
+ * Created by Florence Okosun.
+ * Project: Checkpoint Three
+ * Date: 11/4/2015
+ * Time: 4:07 PM
+ */
 
 namespace Florence;
 
+use Slim\Slim;
+use Exception;
 use PDOException;
 use Florence\Emoji;
+use Florence\Connection;
 
-class EmojiController
+abstract class EmojiController
 {
-
-    public function __construct()
+    /**
+    * @var $className
+    * @var $table
+    * @return $table
+    */
+    public static function getTableName()
     {
-        $this->emoji = new Emoji();
+        $className = explode('\\', get_called_class());
+        $table = strtolower(end($className) .'s');
+
+        return $table;
     }
 
     /**
-    * get db connection
+    * fetches all records from the database
+    * @return emojis
     */
-    public function getConnection($connection = null)
+    public static function getAll(Slim $app)
     {
-        if(is_null($connection))
-        {
-            return new DBConnection();
-        }
-    }
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
 
-    public function create() //POST
-    {
-        $connection = $this->getConnection();
+        $connection = new Connection();
 
-        $name = $this->emoji->getName();
-        $char = $this->emoji->getChar();
-        $keywords = $this->emoji->getKeywords();
-        $category = $this->emoji->getCategory();
-        $date_created = $this->emoji->getDateCreated();
-        $date_modified = $this->emoji->getDateModified();
-        $created_by = $this->emoji->getCreatedBy();
-
-        $create = "INSERT INTO emojis(name,char,keywords,category,date_created,date_modified,created_by)
-        VALUES (. " . $name . "," . $char . "," . $keywords . "," . $category . ","
-            . $date_created . "," . $updated_at . ")";
-
-        $stmt = $connection->prepare($create);
         try
         {
+            $sql = "SELECT " . "*" . " FROM ". self::getTableName();
+            $stmt = $connection->query($sql);
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        $result = $stmt->fetchAll($connection::FETCH_CLASS);
+        $result = json_encode($result);
+
+        $response->body($result);
+        return $response;
+    }
+
+    /**
+    * insert instance data into the table
+    */
+    public static function create(Slim $app)
+    {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $connection = new Connection();
+
+        $name       = $app->request->params('name');
+        $emojiChar  = $app->request->params('emojiChar');
+        $keywords   = $app->request->params('keywords');
+        $category   = $app->request->params('category');
+        $createdAt  = date('Y-m-d H:i:s');
+        $updatedAt  = date('Y-m-d H:i:s');
+        $createdBy  = $app->request->params('createdBy');
+
+        try
+        {
+            $sql = "INSERT INTO " . self::getTableName() . "(name, emojiChar, keywords, category,
+                createdAt, updatedAt, createdBy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            $stmt = $connection->prepare($sql);
+
+            $stmt->bindParam(1, $name);
+            $stmt->bindParam(2, $emojiChar);
+            $stmt->bindParam(3, $keywords);
+            $stmt->bindParam(4, $category);
+            $stmt->bindParam(5, $createdAt);
+            $stmt->bindParam(6, $updatedAt);
+            $stmt->bindParam(7, $createdBy);
+
+            $stmt->execute();
+
+            if($stmt->rowCount() > 0) {
+                $response->body(json_encode([
+                  'status'  => 201,
+                  'message' => 'Record created'
+                ]));
+            } else {
+                throw new Exception("Error Processing Request");
+            }
+
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        return $response;
+    }
+
+    /**
+    * @return response mixed
+    */
+    public static function find(Slim $app, $id) {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $connection = new Connection();
+
+        try {
+            $sql = "SELECT " . "*" . " FROM " . self::getTableName() . " WHERE id = " . $id;
+            $stmt = $connection->prepare($sql);
             $stmt->execute();
             $count = $stmt->rowCount();
-            if($count < 1) {
-                throw new RecordExistAlreadyException('Record exist already.');
+
+            } catch(PDOException $e) {
+                $response->body(json_encode(['message' => $e->getExceptionMessage()]));
+                return $response;
             }
-        } catch (RecordExistAlreadyException $e) {
 
-        return $e->getExceptionMessage();
-        } catch(PDOException $e) {
+            if($count < 1) {
+                $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
+                return $response;
+            }
 
-                return $e->getExceptionMessage();
+            $result = $stmt->fetchAll($connection::FETCH_CLASS);
+            $result = json_encode($result);
+
+            $response->body($result);
+        return $response;
+    }
+
+    /**
+    * @return response mixed
+    */
+    public static function findBy(Slim $app, $field, $criteria) {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $connection = new Connection();
+
+        try {
+            $sql = "SELECT * FROM emojis WHERE $field = '$criteria'";
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
+            $count = $stmt->rowCount();
+
+            } catch(PDOException $e) {
+                $response->body(json_encode(['message' => $e->getExceptionMessage()]));
+                return $response;
+            }
+
+            if($count < 1) {
+                $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
+                return $response;
+            }
+
+            $result = $stmt->fetchAll($connection::FETCH_CLASS);
+            $result = json_encode($result);
+
+            $response->body($result);
+        return $response;
+    }
+
+    /**
+    * @return response mixed
+    */
+    public static function update(Slim $app, $id)
+    {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $connection = new Connection();
+
+        $name       = $app->request->params('name');
+        $emojiChar  = $app->request->params('emojiChar');
+        $category   = $app->request->params('category');
+        $keywords    = $app->request->params('keywords');
+        $updatedAt  = date('Y-m-d H:i:s');
+
+        try {
+            $sql= "UPDATE emojis SET name = ?, emojiChar = ?, keywords = ?, category = ?, updatedAt = ? WHERE id = ?";
+
+            $stmt = $connection->prepare($sql);
+            $stmt->bindParam(1, $name);
+            $stmt->bindParam(2, $emojiChar);
+            $stmt->bindParam(3, $keywords);
+            $stmt->bindParam(4, $category);
+            $stmt->bindParam(5, $updatedAt);
+            $stmt->bindParam(6, $id);
+
+            $stmt->execute();
+
+            if($stmt->rowCount() > 0) {
+                $response->body(json_encode([
+                  'status'  => 201,
+                  'message' => 'Record updated'
+                ]));
+                return $response;
+            } else {
+                $response->body(json_encode(['status' => 301, 'message' => 'Bad request']));
+                return $response;
+                //throw new Exception("Error Processing Request");
+            }
+
+        } catch (PDOException $e) {
+            $response->body(json_encode(['message'=> $e->getMessage()]));
+            return $response;
         }
+
+        return $response;
     }
 
-    public function getAll()
+    public static function delete(Slim $app, $id)
     {
-        // spits all emojis out
-        // GET
-    }
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
 
-    public function getById($id)
-    {
-        //get emoji by id
-        // GET
-    }
+        $connection = new Connection();
 
-    public function updateById($id)
-    {
-        //update emoji by id
-        // PUT
-    }
+        try {
+            $sql = "DELETE" . " FROM " . self::getTableName()." WHERE id = ". $id;
+            $stmt = $connection->prepare($sql);
+            $stmt->execute();
 
-    public function delete($id)
-    {
-        //destroy the mother fucker
-        // DELETE
+            if($stmt->rowCount() > 0) {
+                $response->body(json_encode([
+                  'status'  => 201,
+                  'message' => 'Record Deleted'
+                ]));
+            } else {
+                throw new Exception("Error Processing Request", 1);
+            }
+
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+
+        return $response;
     }
 }
