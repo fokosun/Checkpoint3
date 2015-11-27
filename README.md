@@ -19,7 +19,7 @@ So you can for example run a GET in [Postman](https://www.getpostman.com/) like 
 
 Say you want emojis of a particular category:
 
-        GET: https://emojifordevs.herokuapp.com/category/whatsapp
+        GET: https://emojifordevs.herokuapp.com/category/skype
 
 output:
 
