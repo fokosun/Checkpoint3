@@ -37,7 +37,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand">official documentation</a>
+                <a class="navbar-brand" href="#page-top">official documentation</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -72,7 +72,7 @@
                         <span class="name">Emojis for devs</span>
                         <hr class="star-light">
                         <span class="skills">Built from ground up with
-                            <a href="http://www.slimframework.com/" style="color:white;">Slim</a></span>
+                            <a href="http://www.slimframework.com/" style="color:white;">Slim Framework</a></span>
                     </div>
                 </div>
             </div>
@@ -88,13 +88,87 @@
                     <hr class="star-primary">
                 </div>
             </div>
-
-
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h5>
+                        So, like every good API out there, you need to register first
+                        to have access to protected routes.
+                    </h5>
+                    <br><br>
+                    <div class="container">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Endpoint</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Params</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>/register</td>
+                                    <td>GET</td>
+                                    <td>username, password</td>
+                                </tr>
+                                <tr>
+                                    <td>/auth/login</td>
+                                    <td>POST</td>
+                                    <td>username, password</td>
+                                </tr>
+                                <tr>
+                                    <td>/auth/logout</td>
+                                    <td>GET</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <div class="col-lg-12 text-center">
+                                <h2>The juice!</h2>
+                                <hr class="star-primary">
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Endpoint</th>
+                                    <th class="text-center">Method</th>
+                                    <th class="text-center">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>/emojis</td>
+                                    <td>GET</td>
+                                    <td>List all the created emojis</td>
+                                </tr>
+                                <tr>
+                                    <td>/emojis/{id}</td>
+                                    <td>GET</td>
+                                    <td>Gets a single emoji</td>
+                                </tr>
+                                <tr>
+                                    <td>/emojis</td>
+                                    <td>POST</td>
+                                    <td>Create a new emoji</td>
+                                </tr>
+                                <tr>
+                                    <td>/emojis</td>
+                                    <td>PUT</td>
+                                    <td>Updates an emoji</td>
+                                </tr>
+                                <tr>
+                                    <td>/emojis/{id}</td>
+                                    <td>DELETE</td>
+                                    <td>Deletes a single emoji</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-
-
+    </div>
+</section>
 </body>
-
 </html>
