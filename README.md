@@ -3,7 +3,7 @@
 # Emoji REST API
 :bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue:
 
-Emoji is RESTful API that allows you get, find, update or delete any emoji of your choosing. The API uses simple token based authentication.
+Emoji is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API uses simple token based authentication.
 
 ##Usage
 
