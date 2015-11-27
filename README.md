@@ -15,8 +15,6 @@ So you can for example run a GET in Postman like so:
 
         GET: http://emojisfordevs.herokuapps.com/emojis
 
-        
-
         GET: http://emojisfordevs.herokuapps.com/emojis/1
 
 See [full documentation](http://emojisfordevs.herokuapps.com) for the various endpoints and how to consume them.
