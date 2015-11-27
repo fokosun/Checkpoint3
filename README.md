@@ -46,7 +46,7 @@ output:
                 }
             ]
 
-There you go, all he emojis under the **skype** category delivered to you in JSON format!
+There you go, all the emojis under the **skype** category delivered to you in JSON format!
 
 See [full documentation](https://emojifordevs.herokuapp.com) for the various endpoints and how to consume them.
 
