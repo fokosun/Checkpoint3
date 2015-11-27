@@ -7,7 +7,7 @@ EmojiforDevs is a RESTful API that allows you **get**, **find**, **update** or *
 
 ##Usage
 
-There are many fun stuff you can do with EmojiforDevs if you are working on a client or side project. e.g.
+Working on a client project or on a side project? There are many fun stuff you can do with EmojiforDevs e.g.
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
