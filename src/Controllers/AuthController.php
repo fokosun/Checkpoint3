@@ -15,18 +15,6 @@ use Florence\Connection;
 
 class AuthController
 {
-    /**
-    * @var $className
-    * @var $table
-    * @return $table
-    */
-    public static function getTableName()
-    {
-        $className = explode('\\', get_called_class());
-        $table = strtolower(end($className) .'s');
-
-        return $table;
-    }
 
     public static function login(Slim $app)
     {

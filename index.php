@@ -22,7 +22,7 @@ $app->get('/', function() use ($app) {
 });
 
 
-// emojis routes
+// emojis routes group
 $app->group('/emojis', function () use ($app) {
 
     /**
@@ -70,25 +70,27 @@ $app->group('/emojis', function () use ($app) {
 });
 
 
-// Users' routes
+// Users' routes group
 $app->group('/auth', function () use ($app) {
 
     /**
     * login
     */
-    $app->get('/login', function () use ($app) {
+    $app->post('/login', function () use ($app) {
         User::login($app);
     });
 
     /**
     * logout
     */
-    $app->get('/logout', function () use ($app) {
+    $app->post('/logout', function () use ($app) {
         User::logout($app);
     });
 
 });
 
+
+//registration route
 $app->post('/register', function() use ($app){
     // $auth = new AuthController();
     // $auth->registerUser($app);
@@ -96,3 +98,5 @@ $app->post('/register', function() use ($app){
 });
 
 $app->run();
+
+// The end!! ☠ ☺
