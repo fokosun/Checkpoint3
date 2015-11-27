@@ -3,4 +3,13 @@
 # Emoji REST API
 :bowtie: :blush: :smirk: :satisfied: :scream: :stuck_out_tongue:
 
-That's what we're talking about! :wink:
+Emoji is RESTful API that allows you get, find, update or delete any emoji of your choosing. The API uses simple token based authentication.
+
+##Usage
+
+There are many fun stuff you can do with Emoji if you are working on a project. See [full documentation](http://emojisfordevs.herokuapps.com) for the various endpoints and how to consume them.
+
+##Contributing
+Emoji is an open-source project, so please feel free to tell family and friends to consume or contribute to Emoji.
+
+**Happy Coding!**

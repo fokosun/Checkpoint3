@@ -12,8 +12,10 @@ use Slim\Slim;
 use Florence\Emoji;
 use Florence\EmojiController;
 
-$app = new Slim;
-
+$app = new Slim([
+    'templates.path' => 'templates/',
+    'debug'          => true
+]);
 
 $app->group('/emojis', function () use ($app) {
 
