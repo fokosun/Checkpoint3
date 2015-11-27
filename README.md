@@ -11,7 +11,7 @@ Working on a client project or on a side project? There are many fun stuff you c
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
-So you can for example run a GET in [Postman](https://www.getpostman.com/) like so:
+So you can for example run a GET request in [Postman](https://www.getpostman.com/) like so:
 
         GET: https://emojifordevs.herokuapp.com/emojis
 
