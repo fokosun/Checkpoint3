@@ -17,6 +17,35 @@ So you can for example run a GET in [Postman](https://www.getpostman.com/) like 
 
         GET: https://emojifordevs.herokuapp.com/emojis/1
 
+Say you want emojis of a particular category:
+
+        GET: https://emojifordevs.herokuapp.com/category/whatsapp
+
+output:
+
+            [
+                {
+                    "id": 8,
+                    "name": "Sad face",
+                    "emojichar": "☹",
+                    "keywords": "emotion",
+                    "category": "skype",
+                    "createdat": "2015-11-27 11:02:21",
+                    "updatedat": "2015-11-27 11:15:10",
+                    "createdby": "florence"
+                },
+                {
+                    "id": 9,
+                    "name": "Sad faces",
+                    "emojichar": "☹☹",
+                    "keywords": "emotions",
+                    "category": "skype",
+                    "createdat": "2015-11-27 11:48:01",
+                    "updatedat": "2015-11-27 11:48:01",
+                    "createdby": "florence"
+                }
+            ]
+
 See [full documentation](https://emojifordevs.herokuapp.com) for the various endpoints and how to consume them.
 
 ##Contributing
