@@ -11,6 +11,7 @@ use Slim\Slim;
 use Florence\User;
 use Florence\Emoji;
 use Florence\EmojiController;
+use Florence\AuthController;
 
 $app = new Slim([
     'templates.path' => 'templates/',
@@ -91,10 +92,8 @@ $app->group('/auth', function () use ($app) {
 
 
 //registration route
-$app->post('/register', function() use ($app){
-    // $auth = new AuthController();
-    // $auth->registerUser($app);
-    echo "come register";
+$app->post('/register', function() use ($app) {
+    User::register($app);
 });
 
 $app->run();

@@ -95,7 +95,10 @@ abstract class EmojiController
                   'message' => 'Record created'
                 ]));
             } else {
-                throw new Exception("Error Processing Request");
+                $response->body(json_encode([
+                  'status'  => 400,
+                  'message' => 'Error processing request'
+                ]));
             }
 
         } catch (PDOException $e) {
