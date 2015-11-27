@@ -20,6 +20,6 @@ So you can for example run a GET in Postman like so:
 See [full documentation](http://emojisfordevs.herokuapps.com) for the various endpoints and how to consume them.
 
 ##Contributing
-This is an open-source project, so please feel free to tell family and friends to contribute to EmojiforDevs to make it even more awesome.
+This is an open-source project, so please feel free to tell family and friends to contribute to EmojiforDevs to make it even more awesome. [**see how**]()
 
 **Happy Coding!**
