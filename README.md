@@ -9,9 +9,9 @@ Emoji is a RESTful API that allows you **get**, **find**, **update** or **delete
 
 There are many fun stuff you can do with Emoji if you are working on a project. e.g.
 
-**To have a listing of all the created emojis, you need to hit the 'emojis' endpoint.
- 
-So you can for example run a GET in Postman like so:**
+**To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
+
+So you can for example run a GET in Postman like so:
 
         GET: http://emojisfordevs.herokuapps.com/emojis
 
