@@ -52,11 +52,6 @@ class Connection extends PDO
         }
     }
 
-    public function getDriver()
-    {
-        return $this->driver;
-    }
-
     /**
     * use vlucas dotenv to access the .env file
     **/
