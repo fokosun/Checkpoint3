@@ -185,19 +185,17 @@ abstract class EmojiController
         $name       = $app->request->params('name');
         $emojiChar  = $app->request->params('emojiChar');
         $category   = $app->request->params('category');
-        $keywords    = $app->request->params('keywords');
+        $keywords   = $app->request->params('keywords');
         $updatedAt  = date('Y-m-d H:i:s');
+        $createdBy  = 'admin';
 
         try {
-            $sql= "UPDATE emojis SET name = ?, emojiChar = ?, keywords = ?, category = ?, updatedAt = ? WHERE id = ?";
+            $sql= "UPDATE emojis SET name='$name', emojichar='$emojiChar',
+            keywords='$keywords', category='$category', createdby='$createdBy'
+            WHERE id='$id'";
 
             $stmt = $connection->prepare($sql);
-            $stmt->bindParam(1, $name);
-            $stmt->bindParam(2, $emojiChar);
-            $stmt->bindParam(3, $keywords);
-            $stmt->bindParam(4, $category);
-            $stmt->bindParam(5, $updatedAt);
-            $stmt->bindParam(6, $id);
+
 
             $stmt->execute();
 
