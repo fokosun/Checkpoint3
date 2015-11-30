@@ -51,7 +51,7 @@ abstract class EmojiController
         // $result = json_encode($result);
 
         // $response->body($result);
-        return self::getDriver();
+        echo self::getDriver();
     }
 
     /**
