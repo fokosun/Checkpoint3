@@ -34,24 +34,24 @@ abstract class EmojiController
     */
     public static function getAll(Slim $app)
     {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
+        // $response = $app->response();
+        // $response->headers->set('Content-Type', 'application/json');
 
-        $connection = new Connection();
+        // $connection = new Connection();
 
-        try
-        {
-            $sql = "SELECT " . "*" . " FROM ". self::getTableName();
-            $stmt = $connection->query($sql);
-        } catch (PDOException $e) {
-            return $e->getMessage();
-        }
+        // try
+        // {
+        //     $sql = "SELECT " . "*" . " FROM ". self::getTableName();
+        //     $stmt = $connection->query($sql);
+        // } catch (PDOException $e) {
+        //     return $e->getMessage();
+        // }
 
-        $result = $stmt->fetchAll($connection::FETCH_CLASS);
-        $result = json_encode($result);
+        // $result = $stmt->fetchAll($connection::FETCH_CLASS);
+        // $result = json_encode($result);
 
-        $response->body($result);
-        return $response;
+        // $response->body($result);
+        return self::getDriver();
     }
 
     /**

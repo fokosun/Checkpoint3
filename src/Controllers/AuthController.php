@@ -15,37 +15,22 @@ use Florence\Connection;
 
 abstract class AuthController
 {
-    /**
-    * @var $className
-    * @var $table
-    * @return $table
-    */
-    public static function getTableName()
-    {
-        $className = explode('\\', get_called_class());
-        $table = strtolower(end($className) .'s');
-
-        return $table;
-    }
 
     public static function register(Slim $app)
     {
-        echo self::getTableName();
-
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
         $connection = new Connection();
 
-        $username = $app->request->params('username');
-        $password = $app->request->params('password');
-        $token = "";
-        $token_expire = date('Y-m-d H:i:s');
-
         try
         {
-            $sql = "INSERT INTO " . self::getTableName() . "(username, password, token, token_expire)
-            VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO users (username, password, token, token_expire)VALUES (?, ?, ?, ?)";
+
+            $username = $app->request->params('username');
+            $password = $app->request->params('password');
+            $token = "";
+            $token_expire = date('Y-m-d H:i:s');
 
             $stmt = $connection->prepare($sql);
 
@@ -76,9 +61,29 @@ abstract class AuthController
 
     }
 
-    public static function logout(Slim $app)
+    public static function login(Slim $app)
     {
-        echo "loggedout";
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $connection = new Connection();
     }
+
+    /**
+     * Create and return a token
+     *
+     * @return string
+     */
+     public function getToken()
+     {
+        $token = bin2hex(openssl_random_pseudo_bytes(16));
+        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
+        return json_encode([
+          'expiry'=>$tokenExpire,
+          'token' => $token,
+          'username' => $this->username,
+          'password' => $this->password
+        ]);
+     }
 
 }
