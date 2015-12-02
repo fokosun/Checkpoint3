@@ -12,36 +12,23 @@ class EmojiController {
     * @param Slim $app
     * @return $response
     */
-    public static function create(Slim $app)
+   public static function create(Slim $app)
     {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $name = $app->request->params(UserController::format('name'));
-        $char = $app->request->params('char');
-        $keywords = $app->request->params('keywords');
-        $category = $app->request->params(UserController::format('category'));
-        if (! isset($name)) {
-            return Errors::error401('Insert a name');
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $name       = $app->request->params('name');
+        $emojichar  = $app->request->params('emojichar');
+        $keywords   = $app->request->params('keywords');
+        $category   = $app->request->params('category');
+        $createdby  = $app->request->params('createdby');
+
+        if(! (isset($name) || isset($emojichar) || isset($keywords) || isset($category))) {
+            $response->body(json_encode(['status' => 204,
+                'message' => 'One or more credentials misspelled or missing!',
+                'credentials' => ['name', 'emojichar','keywords', 'category'] ]));
         }
-        if (! isset($char)) {
-            return Errors::error401('Insert an emoji');
-        }
-        if (! isset($keywords)) {
-            return Errors::error401('Insert keywords');
-        }
-        if (! isset($category)) {
-            return Errors::error401('Insert a category');
-        }
-        $passcode = Authorize::authentication($app);
-        if ($passcode) {
-                $emoji = new Emoji;
-                $emoji->name = $name;
-                $emoji->char = $char;
-                $emoji->keywords = $keywords;
-                $emoji->category = $category;
-                $emoji->created_by = Authorize::authentication($app);
-                $emoji->save();
-                return json_encode(['status' => 201, 'message' => 'Your emoji was successfully created.']);
-        }
+        return $response;
     }
 
     /**
