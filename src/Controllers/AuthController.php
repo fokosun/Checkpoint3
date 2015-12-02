@@ -1,89 +1,120 @@
 <?php
-/**
-* Emoji API
-* This script provides a RESTful API interface for Emojis
-* Author: Florence Okosun
-*/
 
 namespace Florence;
 
 use Slim\Slim;
-use Exception;
-use PDOException;
 use Florence\User;
-use Florence\Connection;
+use Illuminate\Database\QueryException;
 
-abstract class AuthController
-{
+class AuthController {
 
+    /**
+    * @param Slim $app
+    * @return $response
+    */
     public static function register(Slim $app)
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $connection = new Connection();
+        $username = $app->request->params('username');
+        $password = $app->request->params('password');
 
-        try
-        {
-            $sql = "INSERT INTO users (username, password, token, token_expire)VALUES (?, ?, ?, ?)";
+        $user = new User;
 
-            $username = $app->request->params('username');
-            $password = $app->request->params('password');
-            $token = "";
-            $token_expire = date('Y-m-d H:i:s');
+        $user->username = $username;
+        $user->password = $password;
 
-            $stmt = $connection->prepare($sql);
-
-            $stmt->bindParam(1, $username);
-            $stmt->bindParam(2, $password);
-            $stmt->bindParam(3, $token);
-            $stmt->bindParam(4, $token_expire);
-
-            $stmt->execute();
-
-            if($stmt->rowCount() > 0) {
-                $response->body(json_encode([
-                  'status'  => 200,
-                  'message' => 'Record created'
-                ]));
-            } else {
-                $response->body(json_encode([
-                  'status'  => 400,
-                  'message' => 'Error processing request'
-                ]));
-            }
-
-        } catch (PDOException $e) {
-            return $e->getMessage();
+        try {
+            $user->save();
+            $response->body(json_encode(['status' => 200,
+                'message' => 'Way to go ' . $username . '!',
+                'username' => $username,
+                'password' => $password]));
+        } catch(QueryException $e) {
+            $response->body(json_encode(['status' => 401, 'message' => 'Sorry, this user exists already!']));
         }
 
         return $response;
-
     }
 
+    /**
+    * @param Slim $app
+    * @return $response
+    */
     public static function login(Slim $app)
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $connection = new Connection();
+        $username = $app->request->params('username');
+        $password = $app->request->params('password');
+
+        $data = self::tokenize($username, $password);
+        $data  = json_decode($data, true);
+
+        $token = $data['token'];
+        $token_expire = $data['expiry'];
+
+        try {
+            if (array_key_exists('token', $data)) {
+                $curr_surfer = User::where('username', $username)->get();
+                $check = count($curr_surfer);
+
+                if($check > 0) {
+                    User::where('username', $username)
+                    ->update(['token' => $token, 'token_expire' => $token_expire]);
+                    $response->body(json_encode($data));
+                } else {
+                    $response->body(json_encode(['status' => 401, 'message' => 'You need to register!']));
+                }
+                return $response;
+            }
+
+        } catch(QueryException $e) {
+            $response->body(json_encode(['status' => 401, 'message' => 'You need to register!']));
+        }
+        $response->header('Authorization', $data['token']);
+        return $response;
     }
 
     /**
-     * Create and return a token
-     *
-     * @return string
-     */
-     public function getToken()
-     {
+    * @param Slim $app
+    * @return $response
+    */
+    public static function logout(Slim $app)
+    {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $token   = $app->request->headers->get('Authorization');
+
+        try {
+            $u = User::where('token', $token)
+                    ->update(['token' => null, 'token_expire' => null]);
+            if($u > 0) {
+                $response->body(json_encode(['status' => 'success']));
+            } else {
+                $response->body(json_encode(['status' => 'Token mismatch']));
+            }
+        } catch(QueryException $e) {
+            $response->body(json_encode(['status' => 404, 'message' => 'Error processing request']));
+        }
+
+        // var_dump($u);
+        return $response;
+    }
+
+    private static function tokenize($username, $password)
+    {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
         $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
+
         return json_encode([
           'expiry'=>$tokenExpire,
           'token' => $token,
-          'username' => $this->username,
-          'password' => $this->password
+          'username' => $username,
+          'password' => $password
         ]);
-     }
-
+    }
 }
