@@ -100,11 +100,21 @@ class AuthController {
         if($token == NULL) {
             $response->body(json_encode(['status' => 401, 'message' => 'You have no authorization!']));
         } else {
-            $d = self::isValid($username, $password, $token);
-            var_dump($d);
-            die();
+            $authUser = self::isValid($username, $password, $token);
+            $data = json_decode($authUser);
+
+                foreach ($data as $key=>$value) {
+                    array_push($status, $value);
                 }
-        return $response;
+                    if ($status[0] == 200) {
+                        $response->body(json_encode(['status' => 200, 'message' => 'login success!']));
+                    } else {
+                        $code = $status[0];
+                        $message = $status[1];
+                        $response->body(json_encode(['status' => $code, 'message' => $message]));
+                    }
+            return $response;
+        }
     }
 
     /**
