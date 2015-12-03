@@ -3,8 +3,8 @@
 namespace Florence;
 
 use Slim\Slim;
-use Florence\User;
 use Florence\Emoji;
+use Florence\Authorization;
 
 class EmojiController {
 
@@ -12,7 +12,7 @@ class EmojiController {
     * @param Slim $app
     * @return $response
     */
-   public static function create(Slim $app)
+    public static function create(Slim $app)
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
@@ -21,14 +21,43 @@ class EmojiController {
         $emojichar  = $app->request->params('emojichar');
         $keywords   = $app->request->params('keywords');
         $category   = $app->request->params('category');
-        $createdby  = $app->request->params('createdby');
 
-        if(! (isset($name) || isset($emojichar) || isset($keywords) || isset($category))) {
-            $response->body(json_encode(['status' => 204,
-                'message' => 'One or more credentials misspelled or missing!',
-                'credentials' => ['name', 'emojichar','keywords', 'category'] ]));
+        $token = $app->request->headers('Authorization');
+
+        $auth = Authorization::isAuthorised($token);
+        if($auth) {
+            $data = json_decode($auth);
+            $status = [];
+
+                foreach ($data as $key=>$value) {
+                    array_push($status, $value);
+                }
+
+                if ($status[0] == 200) {
+                     $username = $status[1];
+                }
+
+            $emoji = new Emoji;
+
+            $emoji->name = $name;
+            $emoji->emojichar = $emojichar;
+            $emoji->keywords = $keywords;
+            $emoji->category = $category;
+            $emoji->created_by = $username;
+
+                try {
+                    $emoji->save();
+                    $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
+
+                } catch(QueryException $e) {
+                    $response->body(json_encode(['status' => 500, 'message' => 'unusual error!']));
+                }
+
+            return $response;
+
+        } else {
+            return $auth;
         }
-        return $response;
     }
 
     /**
@@ -125,24 +154,7 @@ class EmojiController {
     */
     public static function delete(Slim $app, $id)
     {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $passcode = Authorize::authentication($app);
-        if ($passcode) {
-            $deleted = Emoji::destroy($id);
-            if ($deleted) {
-                $info = [
-                    "status"  => 400,
-                    "message" => "Emoji $id deleted successfully!"
-                ];
-                return json_encode($info);
-            } else {
-                $info = [
-                    "status"  => 404,
-                    "message" => "Emoji does not exist!"
-                ];
-                return json_encode($info);
-            }
-        }
+       echo 'choi';
     }
 
     /**
