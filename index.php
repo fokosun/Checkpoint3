@@ -38,7 +38,7 @@ $app->group('/emojis', function () use ($app) {
     /**
     * Find emoji by id
     */
-    $app->get('/:id', function ($id) use ($app) {
+    $app->post('/:id', function ($id) use ($app) {
         return EmojiController::find($app, $id);
     });
 
@@ -56,15 +56,19 @@ $app->group('/emojis', function () use ($app) {
         return EmojiController::update($app, $id);
     });
 
+    $app->patch('/:id', function ($id) use ($app) {
+        return EmojiController::update($app, $id);
+    });
+
     /**
-    * Update an emoji
+    * delete an emoji
     */
     $app->delete('/:id', function ($id) use ($app) {
         return EmojiController::delete($app, $id);
     });
 
     /**
-    * extra (fetch emoji by category)
+    * extra (fetch emoji by any criteria)
     */
     $app->get('/:field/:criteria', function ($field, $criteria) use ($app) {
         return EmojiController::findBy($app, $field, $criteria);

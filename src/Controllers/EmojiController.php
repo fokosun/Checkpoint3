@@ -175,7 +175,7 @@ class EmojiController {
                 $update->save();
                 $response->body(json_encode(['status' => 200, 'message' => 'successfully updated!']));
             } else {
-                $response->body(json_encode(['status' => 401, 'message' => 'fdhfdgfdh']));
+                $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
             }
         }
         return $response;
@@ -188,6 +188,22 @@ class EmojiController {
     */
     public static function delete(Slim $app, $id)
     {
-       echo 'choi';
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $token = $app->request->headers('Authorization');
+
+        $auth = Authorization::isAuthorised($token);
+
+        if($auth) {
+            $delete = Emoji::destroy($id);
+
+            if ($delete == 1) {
+                $response->body(json_encode(['status' => 200, 'message' => 'successfully deleted!']));
+            } else {
+                $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
+            }
+        }
+        return $response;
     }
 }
