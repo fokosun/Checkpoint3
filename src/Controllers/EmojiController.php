@@ -98,23 +98,27 @@ class EmojiController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        try {
-            $emoji = Emoji::find($id);
-            $count = count($emoji);
+        $token = $app->request->headers('Authorization');
 
-            if($count < 1) {
-                $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
+        $auth = Authorization::isAuthorised($token);
+        if($auth) {
 
-            } else {
-                $result = json_encode($emoji);
-                $response->body($result);
-            }
-        } catch(Exception $e) {
+            try {
+                $emoji = Emoji::find($id);
+                $count = count($emoji);
+                if($count < 1) {
+                    $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
+                } else {
+                    $result = json_encode($emoji);
+                    $response->body($result);
+                }
+            } catch(Exception $e) {
             $response->body(json_encode(['message' => $e->getExceptionMessage()]));
         }
-
         return $response;
-
+        } else {
+            return $auth;
+        }
     }
 
     /**
@@ -144,7 +148,37 @@ class EmojiController {
         }
 
         return $response;
+    }
 
+    /**
+    * @param $id
+    * @param Slim $app
+    * @return $response
+    */
+    public static function update(Slim $app, $id)
+    {
+        $response = $app->response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $token = $app->request->headers('Authorization');
+
+        $auth = Authorization::isAuthorised($token);
+
+        if($auth) {
+            $update = Emoji::find($id);
+            if ($update) {
+                $columns = $app->request->isPut() ? $app->request->put() : $app->request->patch();
+                foreach ($columns as $key => $value) {
+                    $update->$key = $value;
+                }
+                $update->updated_at = gmdate("Y-m-d H:i:s", time());
+                $update->save();
+                $response->body(json_encode(['status' => 200, 'message' => 'successfully updated!']));
+            } else {
+                $response->body(json_encode(['status' => 401, 'message' => 'fdhfdgfdh']));
+            }
+        }
+        return $response;
     }
 
     /**
@@ -155,30 +189,5 @@ class EmojiController {
     public static function delete(Slim $app, $id)
     {
        echo 'choi';
-    }
-
-    /**
-    * @param $id
-    * @param Slim $app
-    * @return $response
-    */
-    public static function update(Slim $app, $id)
-    {
-        $app->response->headers->set('Content-Type', 'application/json');
-        $passcode = Authorize::authentication($app);
-        if ($passcode) {
-            $update = Emoji::find($id);
-            if ($update) {
-                $columns = $app->request->isPut() ? $app->request->put() : $app->request->patch();
-                foreach ($columns as $key => $value) {
-                    $update->$key = $value;
-                }
-                $update->updated_at = gmdate("Y-m-d H:i:s", time());
-                $update->save();
-                return json_encode(['status' => 201, 'message' => 'Emoji '.$id.' successfully updated!']);
-            } else {
-                    return Errors::error401("The requested id:$id does not exist");
-            }
-        }
     }
 }
