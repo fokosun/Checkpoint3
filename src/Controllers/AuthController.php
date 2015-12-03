@@ -53,6 +53,7 @@ class AuthController {
                 'token' => $token,
                 'token_expire' => $token_expire
                 ]));
+
         } catch(QueryException $e) {
             $response->body(json_encode(['status' => 401, 'message' => 'User exists already!']));
         }
@@ -90,51 +91,37 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $auth = $app->request->headers('Authorization');
+        $token = $app->request->headers('Authorization');
+
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
 
-        if($auth == NULL) {
+        if($token == NULL) {
             $response->body(json_encode(['status' => 401, 'message' => 'You have no authorization!']));
         } else {
-            $data = self::isValid($username, $password);
-            $data = json_decode($data);
-
-                foreach ($data as $key=>$value) {
-                    array_push($status, $value);
-                }
-
-                if ($status[0] !== 200) {
-                    $code = $status[0];
-                    $message = $status[1];
-                    $response->body(json_encode(['status' => $code,
-                        'message' => $message
-                    ]));
-                } else {
-                    $username = $status[1];
-                    $password = $status[2];
-                    //match username, passrd and token
+            $d = self::isValid($username, $password, $token);
+            var_dump($d);
+            die();
                 }
         return $response;
-        }
     }
 
     /**
     * @param $username
     * @param $password
     */
-    public function isValid($username, $password)
+    public function isValid($username, $password, $token)
     {
-        $status = null;
-
         try {
-            $user = User::where('username', $username)->first();
+            $user = User::where('token', $token)->first();
             if (! empty($user)) {
-                if ($user['password'] === $password) {
+                if ($user['password'] === $password && $user['username'] === $username) {
                     $status = json_encode(['status'=>200,
                         'username'  =>  $user['username'],
-                        'password'  =>  $user['password']
+                        'password'  =>  $user['password'],
+                        'token' => $user['token'],
+                        'token_expire' => $user['token_expire']
                         ]);
                 } else {
                     $status = json_encode(['status'=>404,'message'=>'Invalid credentials!']);
