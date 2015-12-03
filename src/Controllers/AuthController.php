@@ -39,18 +39,18 @@ class AuthController {
 
         $user = new User;
 
-        $user->username = $username;
-        $user->password = $password;
-        $user->token = $token;
+        $user->username     = $username;
+        $user->password     = $password;
+        $user->token        = $token;
         $user->token_expire = $token_expire;
 
         try {
             $user->save();
             $response->body(json_encode(['status' => 200,
-                'message' => 'Way to go ' . $username . '!',
-                'username' => $username,
-                'password' => $password,
-                'token' => $token,
+                'message'      => 'Way to go ' . $username . '!',
+                'username'     => $username,
+                'password'     => $password,
+                'token'        => $token,
                 'token_expire' => $token_expire
                 ]));
 
@@ -91,7 +91,7 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $token = $app->request->headers('Authorization');
+        $token    = $app->request->headers('Authorization');
 
         $username = $app->request->params('username');
         $password = $app->request->params('password');
@@ -156,6 +156,10 @@ class AuthController {
         return $status;
     }
 
+    /**
+    * @return boolead
+    * checks if token is expired
+    */
     public function isTokenExpired($token)
     {
         $user = User::where('token', $token)->first();

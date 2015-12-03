@@ -1,209 +1,27 @@
 <?php
 
-namespace Florence;
+namespace Florence\Test;
 
-use Slim\Slim;
-use Florence\Emoji;
-use Florence\Authorization;
+use GuzzleHttp\Client;
 
-class EmojiController {
-
-    /**
-    * @param Slim $app
-    * @return $response
-    */
-    public static function create(Slim $app)
+class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
+{
+    public function testGetRoutes()
     {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
 
-        $name       = $app->request->params('name');
-        $emojichar  = $app->request->params('emojichar');
-        $keywords   = $app->request->params('keywords');
-        $category   = $app->request->params('category');
+        $client     = new Client();
+        $index      = 'http://localhost:4190';
 
-        $token = $app->request->headers('Authorization');
+        $allEmojis  = 'http://localhost:4190/emojis';
 
-        $auth = Authorization::isAuthorised($token);
-        if($auth) {
-            $data = json_decode($auth);
-            $status = [];
+        $index_req  =  $client->request('GET', $index);
+        $all_req    =  $client->request('GET', $allEmojis);
 
-                foreach ($data as $key=>$value) {
-                    array_push($status, $value);
-                }
-
-                if ($status[0] == 200) {
-                     $username = $status[1];
-                }
-
-            $emoji = new Emoji;
-
-            $emoji->name = $name;
-            $emoji->emojichar = $emojichar;
-            $emoji->keywords = $keywords;
-            $emoji->category = $category;
-            $emoji->created_by = $username;
-
-                try {
-                    $emoji->save();
-                    $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
-
-                } catch(QueryException $e) {
-                    $response->body(json_encode(['status' => 500, 'message' => 'unusual error!']));
-                }
-
-            return $response;
-
-        } else {
-            return $auth;
-        }
+        $this->assertEquals('200', $index_req->getStatusCode());
+        $this->assertInternalType('object', $index_req->getBody());
+        $this->assertEquals('200', $all_req->getStatusCode());
+        $this->assertInternalType('object', $all_req->getBody());
     }
 
-    /**
-    * @param Slim $app
-    * @return $response
-    */
-    public static function getAll(Slim $app)
-    {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
 
-        try {
-            $emojis = Emoji::all();
-            $count = count($emojis);
-
-            if($count < 1) {
-                $response->body(json_encode(['status' => 404, 'message' => 'No Emojis at this time!']));
-
-            } else {
-                $result = json_encode($emojis);
-                $response->body($result);
-            }
-        } catch(Exception $e) {
-            $response->body(json_encode(['message' => $e->getExceptionMessage()]));
-        }
-
-        return $response;
-
-    }
-
-    /**
-    * @param $id
-    * @param Slim $app
-    * @return $response
-    */
-    public static function find(Slim $app, $id)
-    {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        $token = $app->request->headers('Authorization');
-
-        $auth = Authorization::isAuthorised($token);
-        if($auth) {
-
-            try {
-                $emoji = Emoji::find($id);
-                $count = count($emoji);
-                if($count < 1) {
-                    $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
-                } else {
-                    $result = json_encode($emoji);
-                    $response->body($result);
-                }
-            } catch(Exception $e) {
-            $response->body(json_encode(['message' => $e->getExceptionMessage()]));
-        }
-        return $response;
-        } else {
-            return $auth;
-        }
-    }
-
-    /**
-    * @param $field, $criteria
-    * @param Slim $app
-    * @return $response
-    */
-    public static function findBy(Slim $app, $field, $criteria)
-    {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        try {
-            $emojis = Emoji::where($field, '=', $criteria)->get();
-            $count = count($emojis);
-
-            if($count < 1) {
-                $response->body(json_encode(
-                    ['status' => 404, 'message' => $criteria . ' not found. try something else']));
-
-            } else {
-                $result = json_encode($emojis);
-                $response->body($result);
-            }
-        } catch(Exception $e) {
-            $response->body(json_encode(['message' => $e->getExceptionMessage()]));
-        }
-
-        return $response;
-    }
-
-    /**
-    * @param $id
-    * @param Slim $app
-    * @return $response
-    */
-    public static function update(Slim $app, $id)
-    {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        $token = $app->request->headers('Authorization');
-
-        $auth = Authorization::isAuthorised($token);
-
-        if($auth) {
-            $update = Emoji::find($id);
-            if ($update) {
-                $columns = $app->request->isPut() ? $app->request->put() : $app->request->patch();
-                foreach ($columns as $key => $value) {
-                    $update->$key = $value;
-                }
-                $update->updated_at = gmdate("Y-m-d H:i:s", time());
-                $update->save();
-                $response->body(json_encode(['status' => 200, 'message' => 'successfully updated!']));
-            } else {
-                $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
-            }
-        }
-        return $response;
-    }
-
-    /**
-    * @param $id
-    * @param Slim $app
-    * @return string
-    */
-    public static function delete(Slim $app, $id)
-    {
-        $response = $app->response();
-        $response->headers->set('Content-Type', 'application/json');
-
-        $token = $app->request->headers('Authorization');
-
-        $auth = Authorization::isAuthorised($token);
-
-        if($auth) {
-            $delete = Emoji::destroy($id);
-
-            if ($delete == 1) {
-                $response->body(json_encode(['status' => 200, 'message' => 'successfully deleted!']));
-            } else {
-                $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
-            }
-        }
-        return $response;
-    }
 }
