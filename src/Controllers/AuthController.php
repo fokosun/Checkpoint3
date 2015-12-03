@@ -20,6 +20,21 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
+        $data = self::validate($username, $password);
+        $data = json_decode($data);
+
+        $status = [];
+            foreach ($data as $key=>$value) {
+                array_push($status, $value);
+            }
+
+        if ($status[0] == 200) {
+            $username = $status[1];
+            $password = $status[2];
+        } else {
+            $response->body(json_encode(['status' => 500, 'message' => 'Unknownn error']));
+        }
+
         $user = new User;
 
         $user->username = $username;
@@ -38,6 +53,21 @@ class AuthController {
         return $response;
     }
 
+    public function validate($username, $password) {
+
+        if(empty($username) || empty($password)) {
+            $status = json_encode(['status'=>'204',
+                'message'=>'No content!'
+                ]);
+        } else {
+           $status = json_encode(['status'=>'200',
+                'username'=> $username,
+                'password' => $password]);
+        }
+
+        return $status;
+    }
+
     /**
     * @param Slim $app
     * @return $response
@@ -50,32 +80,57 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-        $data = self::tokenize($username, $password);
-        $data  = json_decode($data, true);
+        $tachi = self::isValid($username, $password);
+        if($tachi !== true) {
+            echo "no";
+        } else {
+            $token = self::tokenize($username, $password);
+            echo $token;
+        }
+    }
 
-        $token = $data['token'];
-        $token_expire = $data['expiry'];
+    /**
+    * @param $username
+    * @param $password
+    */
+    public function isValid($username, $password)
+    {
+        $status = null;
 
         try {
-            if (array_key_exists('token', $data)) {
-                $curr_surfer = User::where('username', $username)->get();
-                $check = count($curr_surfer);
-
-                if($check > 0) {
-                    User::where('username', $username)
-                    ->update(['token' => $token, 'token_expire' => $token_expire]);
-                    $response->body(json_encode($data));
+            $user = User::where('username', $username)->first();
+            // var_dump($user['username']);
+            // die();
+            if (! empty($user)) {
+                if ($user['password'] === $password) {
+                    $status  = true;
                 } else {
-                    $response->body(json_encode(['status' => 401, 'message' => 'You need to register!']));
+                    $status = json_encode(['status'=>'404','message'=>'Invalid credentials!']);
                 }
-                return $response;
+            } else {
+                $status = json_encode(['status'=> '404','message' => 'Invalid credentials!']);
             }
-
         } catch(QueryException $e) {
-            $response->body(json_encode(['status' => 401, 'message' => 'You need to register!']));
+            $response->body(json_encode(['status' => 401, 'message' => 'Invalid credentials!']));
         }
-        $response->header('Authorization', $data['token']);
-        return $response;
+        return $status;
+    }
+
+    /**
+    * @return string
+    * generate token
+    */
+    private static function tokenize($username, $password)
+    {
+        $token = bin2hex(openssl_random_pseudo_bytes(16));
+        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
+
+        return json_encode([
+          'expiry'=>$tokenExpire,
+          'token' => $token,
+          'username' => $username,
+          'password' => $password
+        ]);
     }
 
     /**
@@ -90,10 +145,10 @@ class AuthController {
         $token   = $app->request->headers->get('Authorization');
 
         try {
-            $u = User::where('token', $token)
+            $destroy = User::where('token', $token)
                     ->update(['token' => null, 'token_expire' => null]);
-            if($u > 0) {
-                $response->body(json_encode(['status' => 'success']));
+            if($destroy > 0) {
+                $response->body(json_encode(['status' => 200, 'message' => 'session destroyed success!']));
             } else {
                 $response->body(json_encode(['status' => 'Token mismatch']));
             }
@@ -101,20 +156,7 @@ class AuthController {
             $response->body(json_encode(['status' => 404, 'message' => 'Error processing request']));
         }
 
-        // var_dump($u);
         return $response;
     }
 
-    private static function tokenize($username, $password)
-    {
-        $token = bin2hex(openssl_random_pseudo_bytes(16));
-        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
-
-        return json_encode([
-          'expiry'=>$tokenExpire,
-          'token' => $token,
-          'username' => $username,
-          'password' => $password
-        ]);
-    }
 }
