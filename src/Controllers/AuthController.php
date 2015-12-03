@@ -100,21 +100,27 @@ class AuthController {
         if($token == NULL) {
             $response->body(json_encode(['status' => 401, 'message' => 'You have no authorization!']));
         } else {
-            $authUser = self::isValid($username, $password, $token);
-            $data = json_decode($authUser);
+            $data = self::validate($username, $password);
+        $data = json_decode($data);
 
-                foreach ($data as $key=>$value) {
-                    array_push($status, $value);
-                }
-                    if ($status[0] == 200) {
-                        $response->body(json_encode(['status' => 200, 'message' => 'login success!']));
-                    } else {
-                        $code = $status[0];
-                        $message = $status[1];
-                        $response->body(json_encode(['status' => $code, 'message' => $message]));
-                    }
-            return $response;
+        $status = [];
+            foreach ($data as $key=>$value) {
+                array_push($status, $value);
+            }
+
+            if (! $status[0] == 200) {
+                $code = $status[0];
+                $message = $status[1];
+                $response->body(json_encode(['status' => $code, 'message' => $message]));
+            } else {
+                $username = $status[1];
+                $password = $status[2];
+                $token = $status[3];
+                $token_expire = $status[4];
+                $response->body(json_encode(['status' => $username, 'username' => $password]));
+            }
         }
+        return $response;
     }
 
     /**
@@ -130,7 +136,6 @@ class AuthController {
                     $expiry = self::isTokenExpired($token);
                         if($expiry == true) {
                             $status = json_encode(['status'=>301,'message'=>'session expired!']);
-                            // die();
                         } else {
                             $status = json_encode(['status'=>200,
                             'username'  =>  $user['username'],
@@ -140,10 +145,10 @@ class AuthController {
                             ]);
                         }
                 } else {
-                    $status = json_encode(['status'=>404,'message'=>'Invalid credentials!']);
+                    $status = json_encode(['status'=>401,'message'=>'Authorization required']);
                 }
             } else {
-                $status = json_encode(['status'=> 500,'message' => 'Error processing request!']);
+                $status = json_encode(['status'=> 500,'message' => 'Authorization required']);
             }
         } catch(QueryException $e) {
             $response->body(json_encode(['status' => 404, 'message' => 'Invalid credentials!']));
