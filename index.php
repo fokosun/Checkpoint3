@@ -7,15 +7,13 @@
 
 
 require_once('vendor/autoload.php');
-require_once('src/connections/Connection.php');
+ // require_once('src/connections/Connection.php');
 
 
 use Slim\Slim;
-use Florence\User;
-use Florence\Emoji;
 use Florence\AuthController;
 use Florence\EmojiController;
-use Illuminate\Database\Capsule\Manager as Capsule;
+
 
 $app = new Slim([
     'templates.path' => 'templates/',

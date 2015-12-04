@@ -23,6 +23,9 @@
 
      "autoload":
      {
+        "files": [
+        "src/connections/Connection.php"
+        ],
         "psr-4":
         {
             "Florence\\" : "src/"
