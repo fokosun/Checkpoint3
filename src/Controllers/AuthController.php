@@ -20,8 +20,8 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-        $data = self::validate($username, $password);
-        $data = json_decode($data);
+        $jsonData = self::validate($username, $password);
+        $data = json_decode($jsonData);
 
         $status = [];
             foreach ($data as $key=>$value) {
@@ -35,6 +35,7 @@ class AuthController {
             $token_expire = $status[4];
         } else {
             $response->body(json_encode(['status' => 500, 'message' => 'Unknownn error']));
+            return $response;
         }
 
         $user = new User;
@@ -53,12 +54,13 @@ class AuthController {
                 'token'        => $token,
                 'token_expire' => $token_expire
                 ]));
-
+              return $response;
         } catch(QueryException $e) {
             $response->body(json_encode(['status' => 401, 'message' => 'User exists already!']));
+            return $response;
         }
 
-        return $response;
+
     }
 
     /**
@@ -66,7 +68,7 @@ class AuthController {
     * @return $status
     * validates fields and entries
     */
-    public function validate($username, $password) {
+    public static function validate($username, $password) {
 
         if(empty($username) || empty($password)) {
             $status = json_encode(['status'=>'204',
@@ -96,12 +98,8 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-
-        if($token == NULL) {
-            $response->body(json_encode(['status' => 401, 'message' => 'You have no authorization!']));
-        } else {
-            $data = self::validate($username, $password);
-        $data = json_decode($data);
+        $jsonData = self::validate($username, $password);
+        $data = json_decode($jsonData);
 
         $status = [];
             foreach ($data as $key=>$value) {
@@ -112,15 +110,16 @@ class AuthController {
                 $code = $status[0];
                 $message = $status[1];
                 $response->body(json_encode(['status' => $code, 'message' => $message]));
-            } else {
-                $username = $status[1];
-                $password = $status[2];
-                $token = $status[3];
-                $token_expire = $status[4];
-                $response->body(json_encode(['status' => $username, 'username' => $password]));
+                return $response;
             }
-        }
-        return $response;
+
+            $username = $status[1];
+            $password = $status[2];
+            $token = $status[3];
+            $token_expire = $status[4];
+            $response->body(json_encode(['status' => 200, 'token' => $token]));
+            return $response;
+
     }
 
     /**
@@ -207,14 +206,17 @@ class AuthController {
                     ->update(['token' => null, 'token_expire' => null]);
             if($destroy > 0) {
                 $response->body(json_encode(['status' => 200, 'message' => 'session destroyed success!']));
-            } else {
-                $response->body(json_encode(['status' => 'Token mismatch']));
+                return $respnse;
             }
+
+            $response->body(json_encode(['status' => 'Token mismatch']));
+            return $response;
+
         } catch(QueryException $e) {
             $response->body(json_encode(['status' => 404, 'message' => 'Error processing request']));
+            return $respnse;
         }
 
-        return $response;
     }
 
 }
