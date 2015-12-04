@@ -20,7 +20,7 @@ class Authorization
     * @param $username
     * @param $password
     */
-    public function isValid($app, $token)
+    public static function isValid($app, $token)
     {
         try {
             $user = User::where('token', $token)->first();
