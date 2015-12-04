@@ -5,8 +5,8 @@
 * Author: Florence Okosun
 */
 
-require "vendor/autoload.php";
-//require "src/connections/Connection.php";
+require_once('vendor/autoload.php');
+require_once('src/connections/Connection.php') ;
 
 use Slim\Slim;
 use Florence\User;
