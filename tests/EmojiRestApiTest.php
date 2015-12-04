@@ -10,7 +10,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     {
 
         $client = new Client();
-        $res = $client->request('GET', 'http://localhost:8080');
+        $res = $client->request('GET', 'https://emojis4devs.herokuapp.com');
 
         $this->assertEquals('200', $res->getStatusCode());
 
