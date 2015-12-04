@@ -101,7 +101,7 @@ class EmojiController {
 
         $token = $app->request->headers('Authorization');
 
-        $auth = Authorization::isAuthorised($token);
+        $auth = Authorization::isAuthorised($app, $token);
         if($auth) {
 
             try {
