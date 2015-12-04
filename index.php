@@ -7,8 +7,6 @@
 
 
 require_once('vendor/autoload.php');
-require_once('src/connections/Connection.php');
-
 
 use Slim\Slim;
 use Florence\AuthController;
