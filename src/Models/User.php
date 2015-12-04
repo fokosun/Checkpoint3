@@ -15,5 +15,5 @@ class User extends Eloquent
     /**
     * @var array
     */
-    protected $fillable = ['username','password'];
+    protected $fillable = ['username','password', 'token', 'token_expire'];
 }

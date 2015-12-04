@@ -8,40 +8,39 @@ use Illuminate\Database\QueryException;
 
 class Authorization
 {
-    public static function isAuthorised($token)
+    public static function isAuthorised($app, $token)
     {
-        if(empty($token)) {
-
-            return false;
+        if (!$token) {
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Token required']));
         }
-        return self::isValid($token);
+        return self::isValid($app, $token);
     }
 
     /**
     * @param $username
     * @param $password
     */
-    public function isValid($token)
+    public function isValid($app, $token)
     {
         try {
             $user = User::where('token', $token)->first();
             if (! empty($user)) {
                 $expiry = self::isTokenExpired($token);
                     if($expiry == true) {
-                        $status = json_encode(['status'=>301,'message'=>'session expired!']);
+                        $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
                     } else {
                         $status = json_encode(['status'=>200,
-                        'username'  =>  $user['username'],
-                        'password'  =>  $user['password'],
-                        'token' => $user['token'],
-                        'token_expire' => $user['token_expire']
+                        'username'      =>  $user['username'],
+                        'password'      =>  $user['password'],
+                        'token'         => $user['token'],
+                        'token_expire'  => $user['token_expire']
                         ]);
                     }
             } else {
-                $status = json_encode(['status'=> 500,'message' => 'Authorization required']);
+                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
             }
         } catch(QueryException $e) {
-            $response->body(json_encode(['status' => 404, 'message' => 'Invalid credentials!']));
+            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
         }
         return $status;
     }
