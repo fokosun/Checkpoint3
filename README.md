@@ -47,7 +47,7 @@ output:
 
 There you go, all the emojis under the **skype** category delivered to you in JSON format!
 
-See [full documentation](https://emojisfordevs.herokuapp.com) for the various endpoints and how to consume them.
+See [full documentation](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
 
 ##Contributing
 This is an open-source project, so please feel free to tell family and friends to contribute to EmojiforDevs to make it even more awesome. [**see how**](https://github.com/andela-fokosun/Checkpoint3/wiki/Contributing)
