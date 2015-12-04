@@ -19,10 +19,16 @@ matrix:
     - php: 5.5
   fast_finish: true
 
-cache:
-  directories:
-    - $HOME/.composer/cache
-
+env:
+  global:
+    - setup=basic
+    - APP_ENV=production
+    - APP_DEBUG=true
+    - DB_DATABASE=emoji
+    - DB_HOST=localhost
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=postgres
+    - DRIVER=pgsql
 
 before_install:
   - composer self-update
@@ -31,7 +37,3 @@ before_install:
 install: travis_retry composer install --no-interaction --prefer-source
 
 script: vendor/bin/phpunit
-
-after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
