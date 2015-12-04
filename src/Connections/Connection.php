@@ -25,4 +25,4 @@ $capsule->addConnection([
 ]);
 
 $capsule->setAsGlobal();
-$capsule->bootEloquent();
+//$capsule->bootEloquent();
