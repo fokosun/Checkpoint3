@@ -24,7 +24,7 @@
      "autoload":
      {
         "files": [
-        "src/connections/Connection.php"
+        "src/Connections/Connection.php"
         ],
         "psr-4":
         {
