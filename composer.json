@@ -42,7 +42,7 @@
     },
     "scripts": {
        "post-install-cmd": [
-           'composer dump-autoload'
+           "composer dump-autoload"
        ]
    }
 }
