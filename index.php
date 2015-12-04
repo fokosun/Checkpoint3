@@ -7,7 +7,7 @@
 
 
 require_once('vendor/autoload.php');
- // require_once('src/connections/Connection.php');
+require_once('src/connections/Connection.php');
 
 
 use Slim\Slim;
