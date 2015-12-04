@@ -2,7 +2,7 @@
 /**
 * Emoji API
 * This script provides a RESTful API interface for Emojis
-* Author: It is I, Florence Okosun
+* Author: Florence Okosun
 */
 
 require "vendor/autoload.php";
