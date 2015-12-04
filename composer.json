@@ -39,5 +39,10 @@
             "Florence\\Test\\": "tests/"
         },
         "classmap": ["tests/"]
-    }
+    },
+    "scripts": {
+       "post-install-cmd": [
+           'composer dump-autoload'
+       ]
+   }
 }
