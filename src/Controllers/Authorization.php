@@ -45,7 +45,7 @@ class Authorization
         return $status;
     }
 
-    public function isTokenExpired($token)
+    public static function isTokenExpired($token)
     {
         $user = User::where('token', $token)->first();
 
