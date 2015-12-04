@@ -66,7 +66,7 @@ class AuthController {
     * @return $status
     * validates fields and entries
     */
-    public function validate($username, $password) {
+    public static function validate($username, $password) {
 
         if(empty($username) || empty($password)) {
             $status = json_encode(['status'=>'204',
