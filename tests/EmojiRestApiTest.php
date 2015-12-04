@@ -2,19 +2,27 @@
 
 namespace Florence\Test;
 
+use Florence\Config;
 use GuzzleHttp\Client;
 
 class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 {
-    public function testGetRoutes()
-    {
+    protected $domain;
+    protected $client;
+    protected $token;
 
-        $client = new Client();
-        $res = $client->request('GET', 'https://emojis4devs.herokuapp.com');
+    public function setUp() {
 
-        $this->assertEquals('200', $res->getStatusCode());
+        Config::loadenv();
 
+        $this->domain = 'http://emojis4devs.herokuapp.com';
+        $this->client = new Client();
+        $this->token = getenv('token');
     }
 
-
+    public function testGetRoutes()
+    {
+        $res = $this->client->request('GET', $this->domain);
+        $this->assertEquals('200', $res->getStatusCode());
+    }
 }

@@ -5,7 +5,6 @@
 * Author: Florence Okosun
 */
 
-
 require_once('vendor/autoload.php');
 
 use Slim\Slim;

@@ -11,8 +11,8 @@ class Config
     **/
    public static function loadenv()
    {
-        If (! getenv('APP_ENV') == 'production') {
-            $dotenv = new Dotenv($_SERVER['DOCUMENT_ROOT']);
+        if(getenv('APP_ENV') !== 'production') {
+            $dotenv = new Dotenv(__DIR__);
             $dotenv->load();
         }
     }
