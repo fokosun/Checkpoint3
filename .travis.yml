@@ -16,12 +16,23 @@ matrix:
     - php: 7.0
     - php: 5.3
     - php: 5.4
+    - php: 5.5
   fast_finish: true
 
 cache:
   directories:
     - $HOME/.composer/cache
 
+env:
+  global:
+    - setup=basic
+    - APP_ENV=production
+    - APP_DEBUG=true
+    - DB_DATABASE=emoji
+    - DB_HOST=localhost
+    - DB_USERNAME=postgres
+    - DB_PASSWORD=postgres
+    - DRIVER=pgsql
 
 before_install:
   - composer self-update
