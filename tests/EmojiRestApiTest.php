@@ -35,7 +35,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     /** protected route
     * tests registration endpoint
     */
-    public function testPostRegister()
+    public function testRegister()
     {
         $register = $this->client->request('POST', $this->url.'/register');
         $content = $register->getHeader('content-type')[0];
@@ -45,10 +45,25 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
+    public function testLogin()
+    {
+        $req = $this->client->request('POST', $this->url.'/auth/login',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'username' => 'craig',
+                            'password' => 'pass123'
+        ]]);
+
+        $content = $req->getHeader('content-type')[0];
+
+        $this->assertInternalType('object' , $req);
+        $this->assertEquals('200', $req->getStatusCode());
+        $this->assertEquals('application/json', $content);
+    }
+
     /**
     * tests for all unprotected GET routes
     */
-    public function testGetRoutes()
+    public function testAllGETRoutes()
     {
         $index = $this->client->request('GET', $this->url);
         $emojis = $this->client->request('GET', $this->url.'/emojis');
