@@ -51,6 +51,9 @@ class Authorization
 
         $token_expire = $user['token_expire'];
         $currTime = date('Y-m-d H:i:s');
+        var_dump($token_expire);
+        var_dump($currTime);
+        die();
 
         if($token_expire < $currTime) {
             return true;
