@@ -70,13 +70,13 @@ class AuthController {
     */
     public static function validate($username, $password) {
 
-        if(empty($username) || empty($password)) {
-            $status = json_encode(['status'=>'204',
-                'message'=>'No content!'
-                ]);
-        } else {
+        if($username && $password) {
             $token = self::tokenize($username, $password);
             $status = $token;
+        } else {
+           $status = json_encode(['status'=>'204',
+                'message'=>'No content!'
+                ]);
         }
 
         return $status;
@@ -88,6 +88,7 @@ class AuthController {
     */
     public static function login(Slim $app)
     {
+
         $status = [];
 
         $response = $app->response();
@@ -110,21 +111,20 @@ class AuthController {
                 $code = $status[0];
                 $message = $status[1];
                 $response->body(json_encode(['status' => $code, 'message' => $message]));
-                return $response;
-            }
+            } else {
+                $username = $status[1];
+                $token = $status[3];
+                $token_expire = $status[4];
 
-            $username = $status[1];
-            $token = $status[3];
-            $token_expire = $status[4];
-
-            User::where('username', $username)
+                User::where('username', $username)
                     ->update(['token' => $token, 'token_expire' => $token_expire]);
 
-            $response->body(json_encode(['status' => 200,
-                    'username' => $username,
-                    'token' => $token,
-                    'token expires' => $token_expire
-                ]));
+                $response->body(json_encode(['status' => 200,
+                        'username' => $username,
+                        'token' => $token,
+                        'token expires' => $token_expire
+                    ]));
+            }
             return $response;
     }
 
