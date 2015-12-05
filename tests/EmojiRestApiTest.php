@@ -32,7 +32,8 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->request('GET', $this->url.'/auth/emojis');
     }
 
-    /** protected route
+    /**
+    * protected route
     * tests registration endpoint
     */
     public function testRegister()
@@ -45,6 +46,9 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
+    /**
+    * test login
+    */
     public function testLogin()
     {
         $req = $this->client->request('POST', $this->url.'/auth/login',
@@ -52,6 +56,21 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
                             'username' => 'craig',
                             'password' => 'pass123'
         ]]);
+
+        $content = $req->getHeader('content-type')[0];
+
+        $this->assertInternalType('object' , $req);
+        $this->assertEquals('200', $req->getStatusCode());
+        $this->assertEquals('application/json', $content);
+    }
+
+    /**
+    * test logout
+    */
+    public function testLogout()
+    {
+        $req = $this->client->request('POST', $this->url.'/auth/logout',
+            [ 'headers' => ['Authorization'=> $this->token]]);
 
         $content = $req->getHeader('content-type')[0];
 
