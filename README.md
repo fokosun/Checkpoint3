@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/andela-fokosun/Checkpoint3.svg)](https://travis-ci.org/andela-fokosun/Checkpoint3)
 
-# EmojiforDevs REST API
+# Emoji4Devs REST API
 
-EmojiforDevs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API employs the use of simple token based authentication.
+Emoji4Devs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API employs the use of simple token based authentication.
 
 ##Usage
 
-Working on a client project or on a side project? There are many fun stuff you can do with EmojiforDevs e.g.
+Working on a client project or on a side project? There are many fun stuff you can do with Emoji4Devs e.g.
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
@@ -47,7 +47,7 @@ output:
 
 There you go, all the emojis under the **skype** category delivered to you in JSON format!
 
-See [full documentation](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
+See full documentation [here](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
 
 ##Contributing
 This is an open-source project, so please feel free to tell family and friends to contribute to EmojiforDevs to make it even more awesome. [**see how**](https://github.com/andela-fokosun/Checkpoint3/wiki/Contributing)
