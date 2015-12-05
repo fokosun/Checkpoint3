@@ -121,9 +121,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $body->getStatusCode());
     }
 
-    /**
-    * @expectedException GuzzleHttp\Exception\ClientException
-    */
+
     public function testPut()
     {
         $body = $this->client->request('PUT', $this->url.'/emojis/4',[ 'headers' => ['Authorization'=> $this->token],'form_params' => [
@@ -138,9 +136,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
-    /**
-    * @expectedException GuzzleHttp\Exception\ClientException
-    */
+
     public function testPatch()
     {
         $body = $this->client->request('PUT', $this->url.'/emojis/4',
@@ -156,9 +152,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
-    /**
-    * @expectedException GuzzleHttp\Exception\ClientException
-    */
+
     public function testDelete()
     {
         $body = $this->client->request('DELETE', $this->url.'/emojis/4',
