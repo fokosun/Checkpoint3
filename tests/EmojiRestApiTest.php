@@ -104,4 +104,20 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+    * test create emoji
+    */
+    public function testCreate()
+    {
+        $body = $this->client->request('POST', $this->url.'/emojis',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'test',
+                            'emojichar'      => '💯',
+                            'keywords'  => 'tia, andela',
+                            'category'  => 'andela'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+    }
 }
