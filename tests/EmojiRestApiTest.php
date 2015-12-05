@@ -105,7 +105,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * test create emoji
+    * @expectedException GuzzleHttp\Exception\ClientException
     */
     public function testCreate()
     {
@@ -119,5 +119,58 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInternalType('object' , $body);
         $this->assertEquals('200', $body->getStatusCode());
+    }
+
+    /**
+    * @expectedException GuzzleHttp\Exception\ClientException
+    */
+    public function testPut()
+    {
+        $body = $this->client->request('PUT', $this->url.'/emojis/4',[ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'Sunny',
+                            'char'      => '😎',
+                            'keywords'  => 'Holiday, fun',
+                            'category'  => 'Vacation'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+        $this->assertEquals('application/json', $content);
+    }
+
+    /**
+    * @expectedException GuzzleHttp\Exception\ClientException
+    */
+    public function testPatch()
+    {
+        $body = $this->client->request('PUT', $this->url.'/emojis/4',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'Sunny',
+                            'char'      => '😎',
+                            'keywords'  => 'Holiday, fun',
+                            'category'  => 'Vacation'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+        $this->assertEquals('application/json', $content);
+    }
+
+    /**
+    * @expectedException GuzzleHttp\Exception\ClientException
+    */
+    public function testDelete()
+    {
+        $body = $this->client->request('DELETE', $this->url.'/emojis/4',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'Sunny',
+                            'char'      => '😎',
+                            'keywords'  => 'Holiday, fun',
+                            'category'  => 'Vacation'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+        $this->assertEquals('application/json', $content);
     }
 }
