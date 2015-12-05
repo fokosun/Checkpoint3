@@ -30,6 +30,9 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testInvalidEndpoint()
     {
         $request = $this->client->request('GET', $this->url.'/auth/emojis');
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
     }
 
     /**
@@ -52,7 +55,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testLogin()
     {
         $req = $this->client->request('POST', $this->url.'/auth/login',
-            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+            [ 'headers' => ['Authorization'=> ''],'form_params' => [
                             'username' => 'craig',
                             'password' => 'pass123'
         ]]);
@@ -102,12 +105,20 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
+    * @expectedException GuzzleHttp\Exception\ClientException
+    * token may have expired
     */
-    public function testFindEmojiById()
+    public function testCreate()
     {
+        $body = $this->client->request('POST', $this->url.'/emojis',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'test',
+                            'emojichar'      => '💯',
+                            'keywords'  => 'tia, andela',
+                            'category'  => 'andela'
+        ]]);
 
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
     }
-
-
 }
