@@ -1,12 +1,12 @@
 [![Build Status](https://travis-ci.org/andela-fokosun/Checkpoint3.svg)](https://travis-ci.org/andela-fokosun/Checkpoint3)
 
-# Emoji4Devs REST API
+# Emojis4Devs REST API
 
-Emoji4Devs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API employs the use of simple token based authentication.
+Emojis4Devs is a RESTful API that allows you **get**, **find**, **update** or **delete** any emoji of your choosing. The API employs the use of simple token based authentication.
 
 ##Usage
 
-Working on a client project or on a side project? There are many fun stuff you can do with Emoji4Devs e.g.
+Working on a client project or on a side project? There are many fun stuff you can do with Emojis4Devs e.g.
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
