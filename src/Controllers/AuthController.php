@@ -117,9 +117,23 @@ class AuthController {
             $password = $status[2];
             $token = $status[3];
             $token_expire = $status[4];
-            $response->body(json_encode(['status' => 200, 'token' => $token]));
-            return $response;
 
+            $user = new User;
+
+            $user->username     = $username;
+            $user->password     = $password;
+            $user->token        = $token;
+            $user->token_expire = $token_expire;
+
+            $user->save();
+
+            $response->body(json_encode(['status' => 200,
+                    'username' => $username,
+                    'password' => $password,
+                    'token' => $token,
+                    'token expires' => $token_expire
+                ]));
+            return $response;
     }
 
     /**

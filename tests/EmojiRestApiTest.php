@@ -105,8 +105,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
-    * token may have expired
+    * test create emoji
     */
     public function testCreate()
     {
