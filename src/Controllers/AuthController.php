@@ -183,7 +183,7 @@ class AuthController {
       private static function tokenize($username, $password)
     {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
-        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 week'));
+        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
 
         return json_encode([
             'status' => 200,
