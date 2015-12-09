@@ -121,7 +121,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $body = $this->client->request('PUT', $this->url.'/emojis/1',
             [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
                             'name'      => 'test',
-                            'emojichar'      => '💯',
+                            'emojichar' => '💯',
                             'keywords'  => 'tia, andela',
                             'category'  => 'andela'
         ]]);
@@ -130,17 +130,4 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $body->getStatusCode());
     }
 
-    public function testDelete()
-    {
-        $body = $this->client->request('DELETE', $this->url.'/emojis/1',
-            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
-                            'name'      => 'test',
-                            'emojichar'      => '💯',
-                            'keywords'  => 'tia, andela',
-                            'category'  => 'andela'
-        ]]);
-
-        $this->assertInternalType('object' , $body);
-        $this->assertEquals('200', $body->getStatusCode());
-    }
 }
