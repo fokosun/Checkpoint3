@@ -21,7 +21,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->token = getenv('TEST_TOKEN');
         $this->emoji = new Emoji();
         $this->client = new Client();
-        $this->url = "http://localhost:8000";
+        $this->url = "http://emojis4devs.herokuapp.com";
     }
 
     /**
