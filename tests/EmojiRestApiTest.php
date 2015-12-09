@@ -67,20 +67,18 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
-    // /**
-    // * test logout
-    // */
-    // public function testLogout()
-    // {
-    //     $req = $this->client->request('GET', $this->url.'/auth/logout',
-    //         [ 'headers' => ['Authorization'=> $this->token]]);
+    /**
+    * test logout
+    */
+    public function testLogout()
+    {
+        $logout = $this->client->request('GET', $this->url.'/auth/logout');
+        $content = $logout->getHeader('content-type')[0];
 
-    //     $content = $req->getHeader('content-type')[0];
-
-    //     $this->assertInternalType('object' , $req);
-    //     $this->assertEquals('200', $req->getStatusCode());
-    //     $this->assertEquals('application/json', $content);
-    // }
+        $this->assertEquals('200', $logout->getStatusCode());
+        $this->assertInternalType('object', $logout->getBody());
+        $this->assertEquals('application/json', $content);
+    }
 
     /**
     * tests for all unprotected GET routes
