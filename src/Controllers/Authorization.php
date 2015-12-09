@@ -24,25 +24,22 @@ class Authorization
     {
         try {
             $user = User::where('token', $token)->first();
-            if (! empty($user)) {
                 $expiry = self::isTokenExpired($token);
                     if($expiry == true) {
                         $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
                     } else {
                         $status = json_encode(['status'=>200,
-                        'username'      =>  $user['username'],
-                        'password'      =>  $user['password'],
+                        'username'      => $user['username'],
+                        'password'      => $user['password'],
                         'token'         => $user['token'],
                         'token_expire'  => $user['token_expire']
                         ]);
                     }
-            } else {
-                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
-            }
+                return $status;
+
         } catch(QueryException $e) {
-            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
+            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Emoji not found']));
         }
-        return $status;
     }
 
     public static function isTokenExpired($token)
@@ -54,7 +51,8 @@ class Authorization
 
         if($token_expire < $currTime) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 }

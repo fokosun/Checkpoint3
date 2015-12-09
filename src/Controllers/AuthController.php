@@ -42,8 +42,6 @@ class AuthController {
 
         $user->username     = $username;
         $user->password     = $password;
-        $user->token        = $token;
-        $user->token_expire = $token_expire;
 
         try {
             $user->save();
@@ -205,7 +203,7 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $token = $app->request->headers('Authorization');
+        $token    = $app->request->headers('Authorization');
 
         try {
             $destroy = User::where('token', $token)

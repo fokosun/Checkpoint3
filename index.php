@@ -91,7 +91,7 @@ $app->group('/auth', function () use ($app) {
     /**
     * logout
     */
-    $app->post('/logout', function () use ($app) {
+    $app->get('/logout', function () use ($app) {
         return AuthController::logout($app);
     });
 

@@ -25,6 +25,8 @@ class EmojiController {
         $token = $app->request->headers('Authorization');
 
         $auth = Authorization::isAuthorised($app, $token);
+        var_dump($auth);
+        die();
         if ($auth) {
             $data = json_decode($auth);
             $status = [];

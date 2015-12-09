@@ -21,7 +21,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->token = getenv('TEST_TOKEN');
         $this->emoji = new Emoji();
         $this->client = new Client();
-        $this->url = "http://emojis4devs.herokuapp.com";
+        $this->url = "http://localhost:8000";
     }
 
     /**
@@ -67,20 +67,20 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $content);
     }
 
-    /**
-    * test logout
-    */
-    public function testLogout()
-    {
-        $req = $this->client->request('POST', $this->url.'/auth/logout',
-            [ 'headers' => ['Authorization'=> $this->token]]);
+    // /**
+    // * test logout
+    // */
+    // public function testLogout()
+    // {
+    //     $req = $this->client->request('GET', $this->url.'/auth/logout',
+    //         [ 'headers' => ['Authorization'=> $this->token]]);
 
-        $content = $req->getHeader('content-type')[0];
+    //     $content = $req->getHeader('content-type')[0];
 
-        $this->assertInternalType('object' , $req);
-        $this->assertEquals('200', $req->getStatusCode());
-        $this->assertEquals('application/json', $content);
-    }
+    //     $this->assertInternalType('object' , $req);
+    //     $this->assertEquals('200', $req->getStatusCode());
+    //     $this->assertEquals('application/json', $content);
+    // }
 
     /**
     * tests for all unprotected GET routes
@@ -103,5 +103,20 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $contentTypeForEmojis);
 
     }
+
+    public function testCreate()
+    {
+        $body = $this->client->request('POST', $this->url.'/emojis',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'test',
+                            'emojichar'      => '💯',
+                            'keywords'  => 'tia, andela',
+                            'category'  => 'andela'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+    }
+
 
 }
