@@ -107,7 +107,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $body = $this->client->request('POST', $this->url.'/emojis',
             [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
                             'name'      => 'test',
-                            'emojichar'      => '💯',
+                            'emojichar' => '💯',
                             'keywords'  => 'tia, andela',
                             'category'  => 'andela'
         ]]);

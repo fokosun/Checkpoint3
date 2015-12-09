@@ -10,7 +10,7 @@ class Authorization
 {
     public static function isAuthorised($app, $token)
     {
-        if (!$token) {
+        if (is_null($token)) {
             $app->halt(401, json_encode(['status' => 401, 'message' => 'Token required']));
         }
         return self::isValid($app, $token);
