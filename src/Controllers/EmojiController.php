@@ -104,12 +104,7 @@ class EmojiController {
 
         $token = $app->request->headers('Authorization');
         $auth = Authorization::isAuthorised($app, $token);
-        $data = json_decode($auth);
-        $status = [];
-        foreach ($data as $key=>$value) {
-            array_push($status, $value);
-        }
-        $username = $status[1];
+
         try {
             if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
                 $emoji = Emoji::find($id);
