@@ -155,7 +155,6 @@ class EmojiController {
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
-
         $token = $app->request->headers('Authorization');
 
         $auth = Authorization::isAuthorised($app, $token);
