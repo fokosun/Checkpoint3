@@ -29,7 +29,7 @@ class EmojiController {
         foreach ($data as $key=>$value) {
             array_push($status, $value);
         }
-        $username = $status[1];
+
         try {
             $emoji = new Emoji;
             if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
@@ -37,7 +37,7 @@ class EmojiController {
                 $emoji->emojichar   = $emojichar;
                 $emoji->keywords    = $keywords;
                 $emoji->category    = $category;
-                $emoji->created_by  = $username;
+                $emoji->created_by  = $status[1];
                 $emoji->save();
                 $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
             }
