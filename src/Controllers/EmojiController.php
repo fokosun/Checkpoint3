@@ -16,23 +16,25 @@ class EmojiController {
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
+
+        $name = $app->request->params('name');
+        $emojichar = $app->request->params('emojichar');
+        $keywords = $app->request->params('keywords');
+        $category = $app->request->params('category');
+
         $token = $app->request->headers('Authorization');
-
         $auth = Authorization::isAuthorised($app, $token);
-        if ($auth) {
-            $data = json_decode($auth);
-            $status = [];
+        $data = json_decode($auth);
+        $status = [];
+        foreach ($data as $key=>$value) {
+            array_push($status, $value);
+        }
 
-            foreach ($data as $key=>$value) {
-                array_push($status, $value);
-            }
+        $username = $status[1];
 
-            if ($status[0] == 200) {
-                 $username = $status[1];
-            }
-
-            try {
-                $emoji = new Emoji;
+        try {
+            $emoji = new Emoji;
+            if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
                 $emoji->name        = $app->request->params('name');
                 $emoji->emojichar   = $app->request->params('emojichar');
                 $emoji->keywords    = $app->request->params('keywords');
@@ -40,13 +42,22 @@ class EmojiController {
                 $emoji->created_by  = $username;
                 $emoji->save();
                 $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
-            } catch(QueryException $e) {
-                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Error processing request']));
             }
-            return $response;
+        } catch(QueryException $e) {
+            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Error processing request']));
+        }
+        return $response;
+    }
+
+    /**
+    * emoji params validator
+    */
+    public static function validateParams($app, $name, $emojichar, $keywords, $category) {
+        if($name == "" || $name == NULL || $emojichar == "" || $emojichar == NULL
+            || $category == "" || $category == NULL || $keywords == "" || $keywords == NULL) {
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Emoji Params required']));
         } else {
-            $response->body($auth);
-            return $response;
+            return true;
         }
     }
 

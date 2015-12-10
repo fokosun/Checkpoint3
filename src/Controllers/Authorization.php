@@ -10,8 +10,8 @@ class Authorization
 {
     public static function isAuthorised($app, $token)
     {
-        if (is_null($token)) {
-            $app->halt(401, json_encode(['status' => 401, 'message' => 'Token required']));
+        if($token == "" || $token == NULL) {
+            $app->halt(401, json_encode(['status' => 402, 'message' => 'Token required']));
         }
         return self::isValid($app, $token);
     }
@@ -24,7 +24,9 @@ class Authorization
     {
         try {
             $user = User::where('token', $token)->first();
-            $expiry = self::isTokenExpired($token);
+
+            if($user !== NULL) {
+               $expiry = self::isTokenExpired($token);
 
             if($expiry == true) {
                 $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
@@ -36,10 +38,13 @@ class Authorization
                 'token_expire'  => $user['token_expire']
                 ]);
             }
-
             return $status;
+            } else {
+                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Check your token!']));
+            }
+
         } catch(QueryException $e) {
-            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Emoji not found']));
+            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Wrong token']));
         }
     }
 

@@ -33,9 +33,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->client->request('GET', $this->url.'/auth/emojis');
 
-        $this->assertInternalType('object' , $body);
-        $this->assertEquals('200', $body->getStatusCode());
+        $this->assertInternalType('object' , $request);
+        $this->assertEquals('200', $request->getStatusCode());
     }
-
-
 }
