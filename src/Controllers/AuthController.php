@@ -19,11 +19,10 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-        $jsonData = self::validate($username, $password);
+        $jsonData = self::validate($app, $username, $password);
         $data = json_decode($jsonData);
 
         $status = [];
-
         foreach ($data as $key=>$value) {
             array_push($status, $value);
         }
@@ -31,27 +30,23 @@ class AuthController {
         if ($status[0] == 200) {
             $username = $status[1];
             $password = $status[2];
-            $token = $status[3];
-            $token_expire = $status[4];
         }
 
-        $user = new User;
-        $user->username = $username;
-        $user->password = $password;
-
         try {
+            $user = new User;
+            $user->username = $username;
+            $user->password = $password;
             $user->save();
-            $response->body(json_encode(['status' => 200,
+
+            $response->body(json_encode([
+                'status'       => 200,
                 'message'      => 'Way to go ' . $username . '!',
                 'username'     => $username,
-                'password'     => $password,
-                'token'        => $token,
-                'token_expire' => $token_expire
+                'password'     => $password
                 ]));
             return $response;
         } catch(QueryException $e) {
-            $response->body(json_encode(['status' => 401, 'message' => 'User exists already!']));
-            return $response;
+            $app->halt(403, json_encode(['status' => 403, 'message' => 'User exists already!']));
         }
     }
 
@@ -60,17 +55,15 @@ class AuthController {
     * @return $status
     * validates fields and entries
     */
-    public static function validate($username, $password)
+    public static function validate($app, $username, $password)
     {
-        if($username && $password) {
+        if($username == "" || $username == NULL || $password == "" || $password == NULL) {
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Login credentials required']));
+        } else {
             $token = self::tokenize($username, $password);
             $status = $token;
-        } else {
-           $status = json_encode(['status'=>'204',
-                'message'=>'No content!'
-            ]);
+            return $status;
         }
-        return $status;
     }
 
     /**
@@ -89,48 +82,31 @@ class AuthController {
         $jsonData = self::validate($username, $password);
         $data = json_decode($jsonData);
 
-        $status = [];
-            foreach ($data as $key=>$value) {
-                array_push($status, $value);
-            }
+        foreach ($data as $key=>$value) {
+            array_push($status, $value);
+        }
 
-            if (! $status[0] == 200) {
-                $code = $status[0];
-                $message = $status[1];
-                $response->body(json_encode(['status' => $code, 'message' => $message]));
-            } else {
-                $username = $status[1];
-                $token = $status[3];
-                $token_expire = $status[4];
+        if (! $status[0] == 200) {
+            $code = $status[0];
+            $message = $status[1];
+            $response->body(json_encode(['status' => $code, 'message' => $message]));
+        } else {
+            $username = $status[1];
+            $token = $status[3];
+            $token_expire = $status[4];
 
-                User::where('username', $username)
-                    ->update(['token' => $token, 'token_expire' => $token_expire]);
+            User::where('username', $username)
+                ->update(['token' => $token, 'token_expire' => $token_expire]);
 
-                $response->body(json_encode(['status' => 200,
-                        'username' => $username,
-                        'token' => $token,
-                        'token expires' => $token_expire
-                ]));
-            }
+            $response->body(json_encode(['status' => 200,
+                    'username' => $username,
+                    'token' => $token,
+                    'token expires' => $token_expire
+            ]));
+        }
         return $response;
     }
 
-    /**
-    * @return boolean
-    * checks if token is expired
-    */
-    public function isTokenExpired($token)
-    {
-        $user = User::where('token', $token)->first();
-
-        $token_expire = $user['token_expire'];
-        $currTime = date('Y-m-d H:i:s');
-
-        if($token_expire < $currTime) {
-            return true;
-        }
-        return false;
-    }
 
     /**
     * @return json
