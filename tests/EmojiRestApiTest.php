@@ -22,7 +22,6 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->emoji = new Emoji();
         $this->client = new Client();
         $this->url = "http://emojis4devs.herokuapp.com";
-        // $this->url = "http://localhost:8080";
     }
 
     /**
@@ -100,9 +99,11 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('text/html;charset=UTF-8', $contentTypeForIndex);
         $this->assertEquals('application/json', $contentTypeForEmojis);
-
     }
 
+    /**
+    * test create emoji
+    */
     public function testCreate()
     {
         $body = $this->client->request('POST', $this->url.'/emojis',
@@ -117,7 +118,10 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $body->getStatusCode());
     }
 
-    public function testUpdate()
+    /**
+    * test put emoji
+    */
+    public function testPut()
     {
         $body = $this->client->request('PUT', $this->url.'/emojis/1',
             [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
@@ -131,4 +135,37 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $body->getStatusCode());
     }
 
+    /**
+    * test patch emoji
+    */
+    public function testPatch()
+    {
+        $body = $this->client->request('PATCH', $this->url.'/emojis/1',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'test',
+                            'emojichar' => '💯',
+                            'keywords'  => 'tia, andela',
+                            'category'  => 'andela'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+    }
+
+    /**
+    * test delete emoji
+    */
+    public function testDelete()
+    {
+        $body = $this->client->request('DELETE', $this->url.'/emojis/1',
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'name'      => 'test',
+                            'emojichar' => '💯',
+                            'keywords'  => 'tia, andela',
+                            'category'  => 'andela'
+        ]]);
+
+        $this->assertInternalType('object' , $body);
+        $this->assertEquals('200', $body->getStatusCode());
+    }
 }
