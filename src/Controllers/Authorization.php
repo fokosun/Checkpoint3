@@ -24,19 +24,20 @@ class Authorization
     {
         try {
             $user = User::where('token', $token)->first();
-                $expiry = self::isTokenExpired($token);
-                    if($expiry == true) {
-                        $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
-                    } else {
-                        $status = json_encode(['status'=>200,
-                        'username'      => $user['username'],
-                        'password'      => $user['password'],
-                        'token'         => $user['token'],
-                        'token_expire'  => $user['token_expire']
-                        ]);
-                    }
-                return $status;
+            $expiry = self::isTokenExpired($token);
 
+            if($expiry == true) {
+                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
+            } else {
+                $status = json_encode(['status'=>200,
+                'username'      => $user['username'],
+                'password'      => $user['password'],
+                'token'         => $user['token'],
+                'token_expire'  => $user['token_expire']
+                ]);
+            }
+
+            return $status;
         } catch(QueryException $e) {
             $app->halt(401, json_encode(['status'=> 401, 'message' => 'Emoji not found']));
         }

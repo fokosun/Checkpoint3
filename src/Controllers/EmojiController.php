@@ -16,15 +16,9 @@ class EmojiController {
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
-        $name       = $app->request->params('name');
-        $emojichar  = $app->request->params('emojichar');
-        $keywords   = $app->request->params('keywords');
-        $category   = $app->request->params('category');
-
         $token = $app->request->headers('Authorization');
 
         $auth = Authorization::isAuthorised($app, $token);
-
         if ($auth) {
             $data = json_decode($auth);
             $status = [];
@@ -37,14 +31,13 @@ class EmojiController {
                  $username = $status[1];
             }
 
-            $emoji = new Emoji;
-            $emoji->name        = $name;
-            $emoji->emojichar   = $emojichar;
-            $emoji->keywords    = $keywords;
-            $emoji->category    = $category;
-            $emoji->created_by  = $username;
-
             try {
+                $emoji = new Emoji;
+                $emoji->name        = $app->request->params('name');
+                $emoji->emojichar   = $app->request->params('emojichar');
+                $emoji->keywords    = $app->request->params('keywords');
+                $emoji->category    = $app->request->params('category');
+                $emoji->created_by  = $username;
                 $emoji->save();
                 $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
             } catch(QueryException $e) {
@@ -106,13 +99,15 @@ class EmojiController {
                 } else {
                     $result = json_encode($emoji);
                     $response->body($result);
+
                     return $response;
                 }
             } catch(Exception $e) {
-            $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
+                $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
             }
         } else {
             $response->body($auth);
+
             return $response;
         }
     }
@@ -196,7 +191,7 @@ class EmojiController {
             if ($delete == 1) {
                 $response->body(json_encode(['status' => 200, 'message' => 'successfully deleted!']));
             } else {
-                $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
+                $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
             }
         }
         return $response;
