@@ -130,7 +130,7 @@ class AuthController {
     private static function tokenize($username, $password)
     {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
-        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 week'));
+        $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
 
         return json_encode([
             'status' => 200,
@@ -150,22 +150,14 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
-        $token    = $app->request->headers('Authorization');
+        $username = $app->request->params('username');
+        $password = $app->request->params('password');
 
-        try {
-            $destroy = User::where('token', $token)
-                    ->update(['token' => null, 'token_expire' => null]);
-            if($destroy > 0) {
-                $response->body(json_encode(['status' => 200, 'message' => 'session destroyed success!']));
-                return $respnse;
-            }
-
-            $response->body(json_encode(['status' => 'Token mismatch']));
-            return $response;
-
-        } catch(QueryException $e) {
-            $response->body(json_encode(['status' => 404, 'message' => 'Error processing request']));
-            return $respnse;
+        $credentials = self::validateCredentials($app, $username, $password);
+        if($credentials) {
+            User::where('username', $username)->update(['token' => null, 'token_expire' => null]);
+            $response->body(json_encode(['status' => 200, 'message' => 'session destroyed success!']));
+        return $response;
         }
     }
 }
