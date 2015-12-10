@@ -19,6 +19,8 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         Config::loadenv();
 
         $this->token = getenv('TEST_TOKEN');
+        $this->username = getenv('TEST_USERNAME');
+        $this->password = getenv('TEST_PASSWORD');
         $this->emoji = new Emoji();
         $this->client = new Client();
         $this->url = "http://emojis4devs.herokuapp.com";
@@ -55,9 +57,9 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testLogin()
     {
         $req = $this->client->request('POST', $this->url.'/auth/login',
-            [ 'headers' => ['Authorization'=> ''],'form_params' => [
-                            'username' => 'craig',
-                            'password' => 'pass123'
+            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
+                            'username' => $this->username,
+                            'password' => $this->password
         ]]);
 
         $content = $req->getHeader('content-type')[0];
@@ -107,13 +109,18 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $body = $this->client->request('POST', $this->url.'/emojis',
-            [ 'headers' => ['Authorization'=> $this->token],'form_params' => [
-                            'name'      => 'test',
-                            'emojichar' => '💯',
-                            'keywords'  => 'tia, andela',
-                            'category'  => 'andela'
-        ]]);
-
+            [ 'headers' =>
+                [
+                    'Authorization'=> $this->token,
+                    'username' => $this->username,
+                    'password' => $this->password
+                ],
+                    'form_params' => [
+                    'name'      => 'test',
+                    'emojichar' => '💯',
+                    'keywords'  => 'tia, andela',
+                    'category'  => 'andela'
+                ]]);
         $this->assertInternalType('object' , $body);
         $this->assertEquals('200', $body->getStatusCode());
     }
