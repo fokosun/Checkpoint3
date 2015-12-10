@@ -24,6 +24,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->emoji = new Emoji();
         $this->client = new Client();
         $this->url = "http://emojis4devs.herokuapp.com";
+        // $this->url = "http://localhost:8080";
     }
 
     /**
@@ -32,6 +33,40 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testInvalidEndpoint()
     {
         $request = $this->client->request('GET', $this->url.'/auth/emojis');
+
+        $this->assertInternalType('object' , $request);
+        $this->assertEquals('200', $request->getStatusCode());
+    }
+    /**
+     * Test for unprotected Get Routes (Index and getAll)
+     */
+    public function testUnprotectedGetRoutes()
+    {
+        $index = $this->client->request('GET', $this->url);
+        $getAll = $this->client->request('GET', $this->url);
+
+        $_index = $index->getHeader('content-type')[0];
+        $_getAll = $getAll->getHeader('content-type')[0];
+
+        $this->assertEquals('200', $index->getStatusCode());
+        $this->assertEquals('200', $getAll->getStatusCode());
+        $this->assertInternalType('object', $index->getBody());
+        $this->assertInternalType('object', $index->getBody());
+        $this->assertEquals('text/html;charset=UTF-8', $_index);
+        $this->assertEquals('text/html;charset=UTF-8', $_getAll);
+    }
+
+    public function testCreate()
+    {
+        $data = [
+            'name' => 'test',
+            'emojichar' => '🎃',
+            'keywords' => "test, checkpoint, tia",
+            'category' => 'test'
+        ];
+
+        $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
+            ['Authorization'=> $this->token],'form_params' => $data ]);
 
         $this->assertInternalType('object' , $request);
         $this->assertEquals('200', $request->getStatusCode());
