@@ -79,34 +79,49 @@ class AuthController {
         $username = $app->request->params('username');
         $password = $app->request->params('password');
 
-        $jsonData = self::validate($username, $password);
+        $jsonData = self::validate($app, $username, $password);
         $data = json_decode($jsonData);
-
         foreach ($data as $key=>$value) {
             array_push($status, $value);
         }
-
         if (! $status[0] == 200) {
             $code = $status[0];
             $message = $status[1];
             $response->body(json_encode(['status' => $code, 'message' => $message]));
         } else {
             $username = $status[1];
+            $password = $status[2];
             $token = $status[3];
             $token_expire = $status[4];
 
-            User::where('username', $username)
+            $credentials = self::validateCredentials($app, $username, $password);
+            if($credentials) {
+                User::where('username', $username)
                 ->update(['token' => $token, 'token_expire' => $token_expire]);
-
-            $response->body(json_encode(['status' => 200,
-                    'username' => $username,
-                    'token' => $token,
-                    'token expires' => $token_expire
-            ]));
+                $response->body(json_encode(['status' => 200,
+                        'message' => 'you are logged in ' . $username,
+                        'token' => $token,
+                        'token expires' => $token_expire
+                ]));
+            }
         }
         return $response;
     }
 
+    public static function validateCredentials($app, $username, $password)
+    {
+        try {
+            $user = User::where('username', $username)->first();
+            $pass = User::where('password', $password)->first();
+            if($user == NULL || $pass == NULL) {
+                $app->halt(401, json_encode(['status' => 401, 'message' => 'Wrong credentials']));
+            } else {
+                return true;
+            }
+        } catch(QueryException $e) {
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Wrong credentials']));
+        }
+    }
 
     /**
     * @return json
