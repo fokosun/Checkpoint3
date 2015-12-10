@@ -69,14 +69,14 @@ class EmojiController {
         try {
             $emojis = Emoji::all();
             $count  = count($emojis);
-
             if($count < 1) {
                 $response->body(json_encode(['status' => 204, 'message' => 'No Emojis at this time!']));
                 return $response;
             }
-
-            $result = json_encode($emojis);
-            $response->body($result);
+            foreach ($emojis as $key) {
+                $key->keywords = explode(",", $key->keywords);
+            }
+            $response->body($emojis);
             return $response;
 
         } catch(Exception $e) {
