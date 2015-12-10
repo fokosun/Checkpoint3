@@ -106,16 +106,13 @@ class EmojiController {
         $auth = Authorization::isAuthorised($app, $token);
 
         try {
-            if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
-                $emoji = Emoji::find($id);
-                if(count($emoji) < 1) {
-                    $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
-                } else {
-                    $result = json_encode($emoji);
-                    $response->body($result);
-
-                    return $response;
-                }
+            $emoji = Emoji::find($id);
+            if(count($emoji) < 1) {
+                $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
+            } else {
+                $result = json_encode($emoji);
+                $response->body($result);
+                return $response;
             }
         } catch(QueryException $e) {
             $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
@@ -161,24 +158,32 @@ class EmojiController {
     {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
-        $token = $app->request->headers('Authorization');
 
+        $name = $app->request->params('name');
+        $emojichar = $app->request->params('emojichar');
+        $keywords = $app->request->params('keywords');
+        $category = $app->request->params('category');
+
+        $token = $app->request->headers('Authorization');
         $auth = Authorization::isAuthorised($app, $token);
 
-        if($auth) {
+        try {
             $update = Emoji::find($id);
             if ($update) {
                 $columns = $app->request->isPut() ? $app->request->put() : $app->request->patch();
                 foreach ($columns as $key => $value) {
                     $update->$key = $value;
                 }
-                $update->updated_at = date('Y-m-d H:i:s');
-                $update->save();
-                $response->body(json_encode(['status' => 200, 'message' => 'successfully updated!']));
+            $update->updated_at = date('Y-m-d H:i:s');
+            $update->save();
+            $response->body(json_encode(['status' => 200, 'message' => 'successfully updated!']));
             } else {
                 $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
             }
+        } catch(QueryException $e) {
+            $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
         }
+
         return $response;
     }
 
