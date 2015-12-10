@@ -116,7 +116,7 @@ class AuthController {
     }
 
     /**
-    * @return boolead
+    * @return boolean
     * checks if token is expired
     */
     public function isTokenExpired($token)
@@ -133,10 +133,10 @@ class AuthController {
     }
 
     /**
-    * @return string
+    * @return json
     * generate token
     */
-      private static function tokenize($username, $password)
+    private static function tokenize($username, $password)
     {
         $token = bin2hex(openssl_random_pseudo_bytes(16));
         $tokenExpire = date('Y-m-d H:i:s', strtotime('+ 1 hour'));
