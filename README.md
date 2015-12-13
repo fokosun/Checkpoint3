@@ -31,7 +31,7 @@ output:
                     "category": "skype",
                     "createdat": "2015-11-27 11:02:21",
                     "updatedat": "2015-11-27 11:15:10",
-                    "createdby": "florence"
+                    "createdby": "test"
                 },
                 {
                     "id": 9,
@@ -41,7 +41,7 @@ output:
                     "category": "skype",
                     "createdat": "2015-11-27 11:48:01",
                     "updatedat": "2015-11-27 11:48:01",
-                    "createdby": "florence"
+                    "createdby": "test"
                 }
             ]
 
