@@ -32,14 +32,18 @@ class EmojiController {
 
         try {
             $emoji = new Emoji;
-            if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
-                $emoji->name        = $name;
-                $emoji->emojichar   = $emojichar;
-                $emoji->keywords    = $keywords;
-                $emoji->category    = $category;
-                $emoji->created_by  = $status[1];
-                $emoji->save();
-                $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
+            if($status[0] == 200) {
+                if (self::validateParams($app, $name, $emojichar, $keywords, $category)) {
+                    $emoji->name        = $name;
+                    $emoji->emojichar   = $emojichar;
+                    $emoji->keywords    = $keywords;
+                    $emoji->category    = $category;
+                    $emoji->created_by  = $status[1];
+                    $emoji->save();
+                    $response->body(json_encode(['status' => 200, 'message' => 'emoji created']));
+                }
+            } else {
+                $app->halt(401, json_encode(['status'=> $status[0], 'message' => $status[1]]));
             }
         } catch(QueryException $e) {
             $app->halt(401, json_encode(['status'=> 401, 'message' => 'Error processing request']));

@@ -11,7 +11,7 @@ class Authorization
     public static function isAuthorised($app, $token)
     {
         if($token == "" || $token == NULL) {
-            $app->halt(401, json_encode(['status' => 402, 'message' => 'Token required']));
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Token required']));
         }
         return self::isValid($app, $token);
     }
@@ -22,14 +22,11 @@ class Authorization
     */
     public static function isValid($app, $token)
     {
-        try {
-            $user = User::where('token', $token)->first();
-
-            if($user !== NULL) {
-               $expiry = self::isTokenExpired($token);
-
+        $user = User::where('token', $token)->first();
+        if($user !== NULL) {
+            $expiry = self::isTokenExpired($token);
             if($expiry == true) {
-                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Session expired']));
+                $status = json_encode(['status'=> 401, 'message' => 'Session expired']);
             } else {
                 $status = json_encode(['status'=>200,
                 'username'      => $user['username'],
@@ -38,14 +35,10 @@ class Authorization
                 'token_expire'  => $user['token_expire']
                 ]);
             }
-            return $status;
-            } else {
-                $app->halt(401, json_encode(['status'=> 401, 'message' => 'Check your token!']));
-            }
-
-        } catch(QueryException $e) {
-            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Wrong token']));
+        } else {
+            $status = json_encode(['status'=> 401, 'message' => 'Incorrect or misspelled token!']);
         }
+        return $status;
     }
 
     public static function isTokenExpired($token)

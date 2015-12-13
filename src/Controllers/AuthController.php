@@ -103,6 +103,7 @@ class AuthController {
                         'token' => $token,
                         'token expires' => $token_expire
                 ]));
+                $response->header('Authorization', $token);
             }
         }
         return $response;
