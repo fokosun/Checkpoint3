@@ -46,7 +46,7 @@ class EmojiController {
                 $app->halt(401, json_encode(['status'=> $status[0], 'message' => $status[1]]));
             }
         } catch(QueryException $e) {
-            $app->halt(401, json_encode(['status'=> 401, 'message' => 'Error processing request']));
+           $response->body(json_encode(['message' => $e->getExceptionMessage()]));
         }
         return $response;
     }
@@ -83,12 +83,11 @@ class EmojiController {
                 $key->keywords = explode(",", $key->keywords);
             }
             $response->body($emojis);
-            return $response;
-
         } catch(Exception $e) {
             $response->body(json_encode(['message' => $e->getExceptionMessage()]));
-            return $response;
         }
+
+        return $response;
     }
 
     /**
@@ -107,16 +106,18 @@ class EmojiController {
         $category = $app->request->params('category');
 
         try {
-            $emoji = Emoji::find($id);
+            $emoji = Emoji::where('id', $id)->get();
             if(count($emoji) < 1) {
-                $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
-            } else {
-                $result = json_encode($emoji);
-                $response->body($result);
+                $response->body(json_encode(
+                    ['status' => 404, 'message' =>'Emoji not found!']));
                 return $response;
             }
+            foreach ( $emoji as $key ) {
+                $key->keywords = explode(", ", $key->keywords);
+            }
+            $response->body($emoji);
         } catch(QueryException $e) {
-            $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
+           $response->body(json_encode(['message' => $e->getExceptionMessage()]));
         }
         return $response;
     }
@@ -143,11 +144,11 @@ class EmojiController {
             }
             $result = json_encode($emojis);
             $response->body($result);
-            return $response;
         } catch(Exception $e) {
             $response->body(json_encode(['message' => $e->getExceptionMessage()]));
-            return $response;
         }
+
+        return $response;
     }
 
     /**
@@ -182,7 +183,7 @@ class EmojiController {
                 $response->body(json_encode(['status' => 401, 'message' => 'Emoji not found']));
             }
         } catch(QueryException $e) {
-            $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
+           $response->body(json_encode(['message' => $e->getExceptionMessage()]));
         }
         return $response;
     }
@@ -213,7 +214,7 @@ class EmojiController {
                 $response->body(json_encode(['status' => 404, 'message' => 'Emoji not found']));
             }
         } catch(QueryException $e) {
-            $app->halt(404, json_encode(['status'=> 404, 'message' => 'Emoji not found']));
+           $response->body(json_encode(['message' => $e->getExceptionMessage()]));
         }
         return $response;
     }
