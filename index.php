@@ -35,7 +35,7 @@ $app->group('/emojis', function () use ($app) {
     /**
     * Find emoji by id
     */
-    $app->post('/:id', function ($id) use ($app) {
+    $app->get('/:id', function ($id) use ($app) {
         return EmojiController::find($app, $id);
     });
 

@@ -21,10 +21,8 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 
         $this->token = getenv('TEST_TOKEN');
         $this->username = getenv('TEST_USERNAME');
-        $this->new_user = getenv('NEW_USER');
-        $this->login_username = getenv('LOGIN_USERNAME');
-        $this->login_password = getenv('LOGIN_PASSWORD');
         $this->password = getenv('TEST_PASSWORD');
+        $this->new_user = getenv('NEW_USER');
         $this->testId = 3;
         $this->emoji = new Emoji();
         $this->client = new Client();
@@ -102,7 +100,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     /**
     * @expectedException GuzzleHttp\Exception\ClientException
     */
-    public function testCreateWhenAuthorizationNotSet ()
+    public function testCreateWithAuthorizationNotSet ()
     {
         $data = [
             'name' => 'TestEmojiName',
@@ -115,14 +113,106 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+    * test create emoji with authorization set
+    */
+    public function testCreateWithAuthorizationSet()
+    {
+        $data = [
+            'name' => 'test',
+            'emojichar' => '🎃',
+            'keywords' => "test, checkpoint, tia",
+            'category' => 'test'
+        ];
+
+        $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
+            ['Authorization'=> $this->token],'form_params' => $data ]);
+
+        $this->assertEquals('200', $request->getStatusCode());
+    }
+
+    /**
     * @expectedException GuzzleHttp\Exception\ClientException
     */
-    public function testUpdateWhenAuthorizationNotSet ()
+    public function testUpdateWithAuthorizationNotSet ()
     {
         $data = array(
             'name' => 'test'
         );
-        $put = $this->client->request('PUT', $this->url.'/emojis', ['form_params' => $data]);
-        $patch = $this->client->request('PATCH', $this->url.'/emojis', ['form_params' => $data]);
+        $put = $this->client->request('PUT', $this->url.'/emojis/' . $this->testId,
+            ['form_params' => $data]);
+        $patch = $this->client->request('PATCH', $this->url.'/emojis/' . $this->testId,
+            ['form_params' => $data]);
+    }
+
+    /**
+    * test update with authorization set
+    */
+    public function testUpdateWithAuthorizationSet()
+    {
+        $data = [
+            'name' => 'test',
+            'emojichar' => '🎃',
+            'keywords' => "test, checkpoint, tia",
+            'category' => 'test'
+        ];
+
+        $put = $this->client->request('PUT', $this->url.'/emojis/' . $this->testId,
+            [ 'headers' =>['Authorization'=> $this->token],'form_params' => $data ]);
+
+        $patch = $this->client->request('PATCH', $this->url.'/emojis/' . $this->testId,
+            [ 'headers' =>['Authorization'=> $this->token],'form_params' => $data ]);
+
+        $this->assertEquals('200', $put->getStatusCode());
+        $this->assertEquals('200', $patch->getStatusCode());
+    }
+
+    /**
+    * @expectedException GuzzleHttp\Exception\ClientException
+    */
+    public function testDeleteWithAuthorizationNotSet()
+    {
+        $delete = $this->client->request('DELETE', $this->url.'/emojis/' . $this->testId);
+    }
+
+    /**
+    * Test delete with authorization set
+    */
+    public function testDeleteWithAuthorizationSet()
+    {
+        $delete = $this->client->request('DELETE', $this->url.'/emojis/' . $this->testId,
+            [ 'headers' =>['Authorization'=> $this->token]]);
+
+        $this->assertEquals('200', $delete->getStatusCode());
+    }
+
+    /**
+    * test login with login credentials
+    */
+    public function testLoginWithCredentials()
+    {
+        $data = [
+            'username' => $this->username,
+            'password' => $this->password
+        ];
+        $request = $this->client->request('POST', $this->url.'/auth/login', ['form_params' => $data]);
+
+        $this->assertInternalType('object' , $request);
+        $this->assertEquals('200', $request->getStatusCode());
+    }
+
+    /**
+    * Test Logout
+    */
+    public function testLogout()
+    {
+        $data = [
+            'username' => $this->username,
+            'password' => $this->password
+        ];
+        $request = $this->client->request('POST', $this->url.'/auth/logout',[ 'headers' =>
+            ['Authorization'=> $this->token],'form_params' => $data ]);
+
+        $this->assertInternalType('object' , $request);
+        $this->assertEquals('200', $request->getStatusCode());
     }
 }

@@ -106,9 +106,6 @@ class EmojiController {
         $keywords = $app->request->params('keywords');
         $category = $app->request->params('category');
 
-        $token = $app->request->headers('Authorization');
-        $auth = Authorization::isAuthorised($app, $token);
-
         try {
             $emoji = Emoji::find($id);
             if(count($emoji) < 1) {
