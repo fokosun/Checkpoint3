@@ -113,6 +113,17 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+    * @expectedException GuzzleHttp\Exception\ClientException
+    */
+    public function testCreateWithoutEmojiParams ()
+    {
+        $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
+            ['Authorization'=> $this->token]]);
+
+        $this->assertEquals('401', $request->getStatusCode());
+    }
+
+    /**
     * test create emoji with authorization set
     */
     public function testCreateWithAuthorizationSet()
