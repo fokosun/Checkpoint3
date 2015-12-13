@@ -21,6 +21,9 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
 
         $this->token = getenv('TEST_TOKEN');
         $this->username = getenv('TEST_USERNAME');
+        $this->new_user = getenv('NEW_USER');
+        $this->login_username = getenv('LOGIN_USERNAME');
+        $this->login_password = getenv('LOGIN_PASSWORD');
         $this->password = getenv('TEST_PASSWORD');
         $this->testId = 3;
         $this->emoji = new Emoji();
@@ -35,7 +38,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testRegisterWithParams()
     {
         $data = [
-            'username' => $this->username,
+            'username' => $this->new_user,
             'password' => $this->password
         ];
         $request = $this->client->request('POST', $this->url.'/register', ['form_params' => $data]);
@@ -56,42 +59,11 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * test login with login credentials
-    */
-    public function testLoginWithCredentials()
-    {
-        $data = [
-            'username' => $this->username,
-            'password' => $this->password
-        ];
-        $request = $this->client->request('POST', $this->url.'/auth/login', ['form_params' => $data]);
-
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
-    }
-
-    /**
     * @expectedException GuzzleHttp\Exception\ClientException
     */
     public function testLoginWithoutCredentials()
     {
         $request = $this->client->request('POST', $this->url.'/auth/login');
-
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
-    }
-
-    /**
-    * Test Logout
-    */
-    public function testLogout()
-    {
-        $data = [
-            'username' => $this->username,
-            'password' => $this->password
-        ];
-        $request = $this->client->request('POST', $this->url.'/auth/logout',[ 'headers' =>
-            ['Authorization'=> $this->token],'form_params' => $data ]);
 
         $this->assertInternalType('object' , $request);
         $this->assertEquals('200', $request->getStatusCode());
@@ -128,25 +100,6 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * test create with authorization set
-     */
-    public function testCreateWithAuthorizationSet()
-    {
-        $data = [
-            'name' => 'test',
-            'emojichar' => '🎃',
-            'keywords' => "test, checkpoint, tia",
-            'category' => 'test'
-        ];
-
-        $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
-            ['Authorization'=> $this->token],'form_params' => $data ]);
-
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
-    }
-
-    /**
     * @expectedException GuzzleHttp\Exception\ClientException
     */
     public function testCreateWhenAuthorizationNotSet ()
@@ -159,27 +112,6 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         ];
 
         $request = $this->client->request('POST', $this->url.'/emojis', ['form_params' => $data]);
-    }
-
-    /**
-     * test update with authorization set
-     */
-    public function testUpdateWithAuthorizationSet()
-    {
-        $data = array(
-            'name' => 'test'
-        );
-
-        $put = $this->client->request('PUT', $this->url.'/emojis/'.$this->testId,
-            [ 'headers' => ['Authorization'=> $this->token],'form_params' => $data ]);
-
-        $patch = $this->client->request('PATCH', $this->url.'/emojis/'.$this->testId,
-            [ 'headers' => ['Authorization'=> $this->token],'form_params' => $data ]);
-
-        $this->assertInternalType('object' , $put);
-        $this->assertEquals('200', $put->getStatusCode());
-        $this->assertInternalType('object' , $patch);
-        $this->assertEquals('200', $patch->getStatusCode());
     }
 
     /**
