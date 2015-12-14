@@ -19,41 +19,10 @@ Supply a `username` and a `password` and you are good to go.
 ![alt text](templates/screenshots/user_login.jpg "Description goes here")
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
-
-So you can for example run a GET request in [Postman](https://www.getpostman.com/) like so:
-
 ![alt text](templates/screenshots/get_all_emojis.jpg "Description goes here")
 
-Say you want emojis of a particular category, `skype` for example:
-
-        GET: https://emojisfordevs.herokuapp.com/category/skype
-
-output:
-
-            [
-                {
-                    "id": 8,
-                    "name": "Sad face",
-                    "emojichar": "☹",
-                    "keywords": "emotion",
-                    "category": "skype",
-                    "createdat": "2015-11-27 11:02:21",
-                    "updatedat": "2015-11-27 11:15:10",
-                    "createdby": "test"
-                },
-                {
-                    "id": 9,
-                    "name": "Sad faces",
-                    "emojichar": "☹☹",
-                    "keywords": "emotions",
-                    "category": "skype",
-                    "createdat": "2015-11-27 11:48:01",
-                    "updatedat": "2015-11-27 11:48:01",
-                    "createdby": "test"
-                }
-            ]
-
-There you go, all the emojis under the **skype** category delivered to you in JSON format!
+**Create a new emoji**
+![alt text](templates/screenshots/create_emoji.jpg "Description goes here")
 
 See full documentation [here](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
 
