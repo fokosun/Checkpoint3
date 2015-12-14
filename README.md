@@ -10,14 +10,13 @@ Working on a client project or on a side project? There are many fun stuff you c
 
 **First thing you have to do is to register. So hit the register route like so:
 
-
-    ![alt text](templates/screenshots/user_registration.jpg "Description goes here")
+![alt text](templates/screenshots/user_registration.jpg "Description goes here")
 
 Supply a `username` and a `password` and you are good to go.
 
 Next thing you want to do is to login:
 
-    ![alt text](templates/screenshots/user_login.jpg "Description goes here")
+![alt text](templates/screenshots/user_login.jpg "Description goes here")
 
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
