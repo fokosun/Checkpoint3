@@ -14,19 +14,16 @@ class AuthController {
     */
     public static function register(Slim $app)
     {
+        $status = [];
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
         $username = $app->request->params('username');
-        $password = $app->request->params('password');
+        $password = password_hash($app->request->params('password'), PASSWORD_BCRYPT);
 
-        $jsonData = self::validate($app, $username, $password);
-        $data = json_decode($jsonData);
-
-        $status = [];
+        $data = json_decode(self::validate($app, $username, $password));
         foreach ($data as $key=>$value) {
             array_push($status, $value);
         }
-
         if ($status[0] == 200) {
             $username = $status[1];
             $password = $status[2];
@@ -35,7 +32,7 @@ class AuthController {
         try {
             $user = new User;
             $user->username = $username;
-            $user->password = password_hash($password, PASSWORD_BCRYPT);;
+            $user->password = $password;
             $user->save();
 
             $response->body(json_encode([
@@ -56,10 +53,12 @@ class AuthController {
     public static function validate($app, $username, $password)
     {
         if($username == "" || $username == NULL || $password == "" || $password == NULL) {
-            $app->halt(401, json_encode(['status' => 401,
-                'message' => 'Registration params required']));
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Registration params required']));
+        } else {
+            $token = self::tokenize($username, $password);
+            $status = $token;
+            return $status;
         }
-        return $status = self::tokenize($username, $password);
     }
 
     /**
