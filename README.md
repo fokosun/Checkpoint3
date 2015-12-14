@@ -14,7 +14,7 @@ Working on a client project or on a side project? There are many fun stuff you c
 
 Supply a `username` and a `password` and you are good to go.
 
-**Next thing you want to do is to login:**
+**Next thing you want to do is to login: do that by hitting the /auth/login route**
 
 ![alt text](templates/screenshots/user_login.jpg "Description goes here")
 
