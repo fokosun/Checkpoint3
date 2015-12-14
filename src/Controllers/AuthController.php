@@ -17,7 +17,7 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
         $username = $app->request->params('username');
-        $password = password_hash($app->request->params('password'), PASSWORD_BCRYPT);
+        $password = $app->request->params('password');
 
         $jsonData = self::validate($app, $username, $password);
         $data = json_decode($jsonData);
@@ -35,7 +35,7 @@ class AuthController {
         try {
             $user = new User;
             $user->username = $username;
-            $user->password = $password;
+            $user->password = password_hash($password, PASSWORD_BCRYPT);;
             $user->save();
 
             $response->body(json_encode([
@@ -56,11 +56,10 @@ class AuthController {
     public static function validate($app, $username, $password)
     {
         if($username == "" || $username == NULL || $password == "" || $password == NULL) {
-            $status = (json_encode(['status' => 401, 'message' => 'Registration credentials required']));
-        } else {
-            $status = self::tokenize($username, $password);
+            $app->halt(401, json_encode(['status' => 401,
+                'message' => 'Registration params required']));
         }
-        return $status;
+        return $status = self::tokenize($username, $password);
     }
 
     /**
