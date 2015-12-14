@@ -14,6 +14,7 @@ class EmojiController {
     */
     public static function create(Slim $app)
     {
+        $status = [];
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
 
@@ -25,7 +26,7 @@ class EmojiController {
         $token = $app->request->headers('Authorization');
         $auth = Authorization::isAuthorised($app, $token);
         $data = json_decode($auth);
-        $status = [];
+
         foreach ($data as $key=>$value) {
             array_push($status, $value);
         }
@@ -55,8 +56,7 @@ class EmojiController {
     * emoji params validator
     */
     public static function validateParams($app, $name, $emojichar, $keywords, $category) {
-        if($name == "" || $name == NULL || $emojichar == "" || $emojichar == NULL
-            || $category == "" || $category == NULL || $keywords == "" || $keywords == NULL) {
+        if(! isset($name, $emojichar, $keywords, $category)) {
             $app->halt(401, json_encode(['status' => 401, 'message' => 'Emoji Params required']));
         } else {
             return true;

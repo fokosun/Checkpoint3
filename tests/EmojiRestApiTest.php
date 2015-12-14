@@ -96,7 +96,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     public function testCreateWithAuthorizationNotSet ()
     {
         $data = [
-            'name' => 'TestEmojiName',
+            'name' => 'test',
             'char' => '🎃',
             'keywords' => "apple, friut, mac",
             'category' => 'fruit'

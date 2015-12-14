@@ -103,6 +103,9 @@ class AuthController {
         return $response;
     }
 
+    /**
+    * Validates that username and password match
+    */
     public static function validateCredentials($app, $username, $password)
     {
         try {
