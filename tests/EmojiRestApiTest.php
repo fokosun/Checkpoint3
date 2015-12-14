@@ -30,7 +30,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * test register with registration params
+    * Test register with registration params
     */
     public function testRegisterWithParams()
     {
@@ -45,30 +45,30 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * test registration without params
+    * Test registration without params
     */
     public function testRegisterWithoutParams()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
-        $request = $this->client->request('POST', $this->url.'/register');
+        $request = $this->client->post($this->url.'/register', ['exceptions' => false]);
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
-    * test login without credentials
+    * Test login without credentials
     */
     public function testLoginWithoutCredentials()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
-        $request = $this->client->request('POST', $this->url.'/auth/login');
+        $request = $this->client->request('POST', $this->url.'/auth/login', ['exceptions' => false]);
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
-    * test invalid endpoints
+    * Test invalid endpoints
     */
     public function testInvalidEndpoint()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
-        $request = $this->client->request('GET', $this->url.'/auth/emojis');
+        $request = $this->client->request('GET', $this->url.'/auth/emojis', ['exceptions' => false]);
+        $this->assertEquals('404', $request->getStatusCode());
     }
 
     /**
@@ -91,33 +91,35 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
+    * Test create emoji without authorization
     */
     public function testCreateWithAuthorizationNotSet ()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $data = [
             'name' => 'TestEmojiName',
             'char' => '🎃',
             'keywords' => "apple, friut, mac",
             'category' => 'fruit'
         ];
+        $request = $this->client->request('POST', $this->url.'/emojis',
+            ['form_params' => $data, 'exceptions' => false]);
 
-        $request = $this->client->request('POST', $this->url.'/emojis', ['form_params' => $data]);
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
-    *
+    * Test create emoji without params
     */
     public function testCreateWithoutEmojiParams ()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
-            ['Authorization'=> $this->token]]);
+            ['Authorization'=> $this->token], 'exceptions' => false]);
+
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
-    * test create emoji with authorization set
+    * Test create emoji with authorization set
     */
     public function testCreateWithAuthorizationSet()
     {
@@ -135,22 +137,24 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
+    * Test update emoji with authorization not set
     */
     public function testUpdateWithAuthorizationNotSet ()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $data = array(
             'name' => 'test'
         );
         $put = $this->client->request('PUT', $this->url.'/emojis/' . $this->testId,
-            ['form_params' => $data]);
+            ['form_params' => $data, 'exceptions' => false]);
         $patch = $this->client->request('PATCH', $this->url.'/emojis/' . $this->testId,
-            ['form_params' => $data]);
+            ['form_params' => $data, 'exceptions' => false]);
+
+        $this->assertEquals('401', $put->getStatusCode());
+        $this->assertEquals('401', $patch->getStatusCode());
     }
 
     /**
-    * test update with authorization set
+    * Test update with authorization set
     */
     public function testUpdateWithAuthorizationSet()
     {
@@ -172,12 +176,14 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    *
+    * Test delete emoji with authorization not set
     */
     public function testDeleteWithAuthorizationNotSet()
     {
-        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
-        $delete = $this->client->request('DELETE', $this->url.'/emojis/' . $this->testId);
+        $request = $this->client->request('DELETE', $this->url.'/emojis/' . $this->testId,
+            ['exceptions' => false]);
+
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
@@ -192,7 +198,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * test login with login credentials
+    * Test login with login credentials set
     */
     public function testLoginWithCredentials()
     {
