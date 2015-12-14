@@ -17,7 +17,7 @@ class AuthController {
         $response = $app->response();
         $response->headers->set('Content-Type', 'application/json');
         $username = $app->request->params('username');
-        $password = $app->request->params('password');
+        $password = password_hash($app->request->params('password'), PASSWORD_BCRYPT);
 
         $jsonData = self::validate($app, $username, $password);
         $data = json_decode($jsonData);
@@ -40,9 +40,7 @@ class AuthController {
 
             $response->body(json_encode([
                 'status'       => 200,
-                'message'      => 'Way to go ' . $username . '!',
-                'username'     => $username,
-                'password'     => $password
+                'message'      => 'Way to go ' . $username . '!'
                 ]));
             return $response;
         } catch(QueryException $e) {
