@@ -8,13 +8,21 @@ Emojis4Devs is a RESTful API that allows you **get**, **find**, **update** or **
 
 Working on a client project or on a side project? There are many fun stuff you can do with Emojis4Devs e.g.
 
+**First thing you have to do is to register. So hit the register route like so:
+
+    ![alt text](templates/screenshots/user_registration.jpg "Description goes here")
+
+Supply a `username` and a `password` and you are good to go.
+
+Next thing you want to do is to login:
+
+    ![alt text](templates/screenshots/user_login.jpg "Description goes here")
+
 **To have a listing of all the created emojis, you need to hit the `emojis` endpoint.**
 
 So you can for example run a GET request in [Postman](https://www.getpostman.com/) like so:
 
-        GET: https://emojisfordevs.herokuapp.com/emojis
-
-        GET: https://emojisfordevs.herokuapp.com/emojis/1
+![alt text](templates/screenshots/get_all_emojis.jpg "Description goes here")
 
 Say you want emojis of a particular category, `skype` for example:
 
@@ -46,8 +54,6 @@ output:
             ]
 
 There you go, all the emojis under the **skype** category delivered to you in JSON format!
-
-![alt text](templates/screenshots/get_all_emojis.jpg "Description goes here")
 
 See full documentation [here](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
 
