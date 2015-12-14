@@ -54,25 +54,21 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    * test login without credentials
     */
     public function testLoginWithoutCredentials()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $request = $this->client->request('POST', $this->url.'/auth/login');
-
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    * test invalid endpoints
     */
     public function testInvalidEndpoint()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $request = $this->client->request('GET', $this->url.'/auth/emojis');
-
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
     }
 
     /**
@@ -95,10 +91,11 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    *
     */
     public function testCreateWithAuthorizationNotSet ()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $data = [
             'name' => 'TestEmojiName',
             'char' => '🎃',
@@ -110,14 +107,13 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    *
     */
     public function testCreateWithoutEmojiParams ()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $request = $this->client->request('POST', $this->url.'/emojis',[ 'headers' =>
             ['Authorization'=> $this->token]]);
-
-        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
@@ -139,10 +135,11 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    *
     */
     public function testUpdateWithAuthorizationNotSet ()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $data = array(
             'name' => 'test'
         );
@@ -175,10 +172,11 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-    * @expectedException GuzzleHttp\Exception\ClientException
+    *
     */
     public function testDeleteWithAuthorizationNotSet()
     {
+        $this->setExpectedException("GuzzleHttp\Exception\ClientException");
         $delete = $this->client->request('DELETE', $this->url.'/emojis/' . $this->testId);
     }
 

@@ -34,7 +34,6 @@ class AuthController {
             $user->username = $username;
             $user->password = $password;
             $user->save();
-
             $response->body(json_encode([
                 'status'       => 200,
                 'message'      => 'Way to go ' . $username . '!'
@@ -52,7 +51,7 @@ class AuthController {
     */
     public static function validate($app, $username, $password)
     {
-        if($username == "" || $username == NULL || $password == "" || $password == NULL) {
+        if(! isset($username, $password)) {
             $app->halt(401, json_encode(['status' => 401, 'message' => 'Registration params required']));
         } else {
             $token = self::tokenize($username, $password);
@@ -109,7 +108,7 @@ class AuthController {
         try {
             $user = User::where('username', $username)->first();
             $pass = User::where('password', $password)->first();
-            if($user == NULL || $pass == NULL) {
+            if($user == null || $pass == null) {
                 $app->halt(401, json_encode(['status' => 401, 'message' => 'Wrong credentials']));
             } else {
                 return true;
