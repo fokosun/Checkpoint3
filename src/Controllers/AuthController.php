@@ -56,7 +56,7 @@ class AuthController {
     public static function validate($app, $username, $password)
     {
         if($username == "" || $username == NULL || $password == "" || $password == NULL) {
-            $app->halt(401, json_encode(['status' => 401, 'message' => 'Login credentials required']));
+            $app->halt(401, json_encode(['status' => 401, 'message' => 'Registration credentials required']));
         } else {
             $token = self::tokenize($username, $password);
             $status = $token;

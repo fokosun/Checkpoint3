@@ -44,15 +44,13 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('200', $request->getStatusCode());
     }
 
-    /**
-    * @expectedException GuzzleHttp\Exception\ClientException
-    */
+
     public function testRegisterWithoutParams()
     {
         $request = $this->client->request('POST', $this->url.'/register');
 
-        $this->assertInternalType('object' , $request);
-        $this->assertEquals('200', $request->getStatusCode());
+        // $this->assertInternalType('object' , $request);
+        $this->assertEquals('401', $request->getStatusCode());
     }
 
     /**
