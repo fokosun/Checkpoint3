@@ -139,7 +139,7 @@ class EmojiRestApiTest extends \PHPUnit_Framework_TestCase
     /**
     * Test update emoji with authorization not set
     */
-    public function testUpdateWithAuthorizationNotSet ()
+    public function testUpdateWithAuthorizationNotSet()
     {
         $data = array(
             'name' => 'test'

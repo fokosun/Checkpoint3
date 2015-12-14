@@ -46,6 +46,7 @@ output:
             ]
 
 There you go, all the emojis under the **skype** category delivered to you in JSON format!
+![alt tag](http://url/to/img.png)
 
 See full documentation [here](https://emojis4devs.herokuapp.com/) for the various endpoints and how to consume them.
 
