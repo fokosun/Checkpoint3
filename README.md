@@ -8,13 +8,13 @@ Emojis4Devs is a RESTful API that allows you **get**, **find**, **update** or **
 
 Working on a client project or on a side project? There are many fun stuff you can do with Emojis4Devs e.g. All examples are shown in POSTMAN.
 
-**First thing you have to do is to register. So hit the register route like so:**
+**First thing you have to do is to register. So hit the register endpoint like so:**
 
 ![alt text](templates/screenshots/user_registration.jpg "Description goes here")
 
 Supply a `username` and a `password` and you are good to go.
 
-**Next thing you want to do is to login: do that by hitting the /auth/login route**
+**Next thing you want to do is to login: do that by hitting the /auth/login endpoint**
 
 ![alt text](templates/screenshots/user_login.jpg "Description goes here")
 
